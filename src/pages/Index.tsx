@@ -1,13 +1,32 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import LandingPage from "@/components/LandingPage";
+import ResumeBuilder from "@/components/ResumeBuilder";
+
+type UserPath = 'student' | 'employee' | null;
 
 const Index = () => {
+  const [currentView, setCurrentView] = useState<'landing' | 'builder'>('landing');
+  const [userPath, setUserPath] = useState<UserPath>(null);
+
+  const handleSelectPath = (path: UserPath) => {
+    setUserPath(path);
+    setCurrentView('builder');
+  };
+
+  const handleBackToHome = () => {
+    setCurrentView('landing');
+    setUserPath(null);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      {currentView === 'landing' && (
+        <LandingPage onSelectPath={handleSelectPath} />
+      )}
+      {currentView === 'builder' && userPath && (
+        <ResumeBuilder userType={userPath} onBack={handleBackToHome} />
+      )}
+    </>
   );
 };
 
