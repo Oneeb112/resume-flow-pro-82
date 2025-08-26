@@ -18,6 +18,11 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'sans': ['Inter', 'ui-sans-serif', 'system-ui'],
+				'serif': ['Playfair Display', 'ui-serif', 'Georgia'],
+				'display': ['Playfair Display', 'Inter', 'ui-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -27,7 +32,8 @@ export default {
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))',
-					hover: 'hsl(var(--primary-hover))'
+					hover: 'hsl(var(--primary-hover))',
+					light: 'hsl(var(--primary-light))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -70,9 +76,11 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			boxShadow: {
+				'xs': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
 				'soft': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06)',
 				'medium': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05)',
-				'large': '0 25px 50px -12px rgb(0 0 0 / 0.25)'
+				'large': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
+				'glow': '0 0 0 1px hsl(221 83% 53% / 0.1), 0 10px 30px -10px hsl(221 83% 53% / 0.3)'
 			},
 			keyframes: {
 				'accordion-down': {

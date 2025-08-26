@@ -6,43 +6,50 @@
 
 @layer base {
   :root {
-    /* Corporate Blue Theme */
+    /* Modern Professional Color Palette */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 224 71% 4%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 224 71% 4%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 224 71% 4%;
 
-    /* Professional Blue Palette */
-    --primary: 217 91% 60%;
+    /* Premium Blue Gradient System */
+    --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 217 91% 55%;
+    --primary-hover: 221 83% 48%;
+    --primary-light: 221 83% 95%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 224 71% 4%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 217 91% 60%;
+    --accent: 221 83% 53%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 217 91% 60%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 221 83% 53%;
 
-    /* Professional Design Tokens */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 70%));
-    --gradient-hero: linear-gradient(135deg, hsl(217 91% 60%), hsl(220 70% 50%));
-    --shadow-soft: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.06);
-    --shadow-medium: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -2px hsl(0 0% 0% / 0.05);
-    --shadow-large: 0 25px 50px -12px hsl(0 0% 0% / 0.25);
+    /* Enhanced Design Tokens */
+    --gradient-primary: linear-gradient(135deg, hsl(221 83% 53%), hsl(236 72% 58%));
+    --gradient-hero: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(236 72% 58%) 50%, hsl(250 84% 54%) 100%);
+    --gradient-card: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    --gradient-mesh: radial-gradient(circle at 25% 25%, hsl(221 83% 95%) 0%, transparent 50%), 
+                     radial-gradient(circle at 75% 75%, hsl(236 72% 95%) 0%, transparent 50%);
+    
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-soft: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
+    --shadow-medium: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+    --shadow-large: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --shadow-glow: 0 0 0 1px hsl(221 83% 53% / 0.1), 0 10px 30px -10px hsl(221 83% 53% / 0.3);
     
     --radius: 0.75rem;
 
@@ -108,23 +115,34 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', 'Inter', serif;
   }
 }
 
 @layer components {
-  /* Hero Button Variants */
+  /* Enhanced Button Variants */
   .btn-hero {
-    @apply bg-gradient-to-r from-primary to-primary-hover text-primary-foreground font-semibold py-4 px-8 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95;
+    @apply bg-gradient-to-r from-primary via-primary to-primary-hover text-primary-foreground font-semibold py-4 px-8 rounded-xl transition-all duration-500 hover:scale-105 hover:shadow-glow active:scale-95;
+    box-shadow: var(--shadow-glow);
   }
   
   .btn-secondary-hero {
-    @apply bg-white/10 backdrop-blur-sm text-foreground border border-border font-semibold py-4 px-8 rounded-xl shadow-soft transition-all duration-300 hover:bg-white/20 hover:shadow-medium hover:scale-105 active:scale-95;
+    @apply bg-white/90 backdrop-blur-sm text-foreground border border-border/50 font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:bg-white hover:shadow-medium hover:scale-105 active:scale-95;
   }
 
-  /* Card Variants */
+  .btn-upload {
+    @apply bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-large active:scale-95;
+  }
+
+  /* Enhanced Card Variants */
   .card-glass {
-    @apply bg-white/80 backdrop-blur-sm border border-white/20 rounded-2xl shadow-medium;
+    @apply backdrop-blur-xl border border-white/20 rounded-2xl shadow-large;
+    background: var(--gradient-card);
   }
   
   .card-elevated {

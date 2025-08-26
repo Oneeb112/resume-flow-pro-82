@@ -15,12 +15,13 @@ import { ResumeData } from "@/types/resume";
 interface ResumeBuilderProps {
   userType: 'student' | 'employee';
   onBack: () => void;
+  initialData?: ResumeData | null;
 }
 
-const ResumeBuilder = ({ userType, onBack }: ResumeBuilderProps) => {
+const ResumeBuilder = ({ userType, onBack, initialData }: ResumeBuilderProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [showPreview, setShowPreview] = useState(false);
-  const [resumeData, setResumeData] = useState<ResumeData>({
+  const [resumeData, setResumeData] = useState<ResumeData>(initialData || {
     personalInfo: {
       fullName: '',
       email: '',
