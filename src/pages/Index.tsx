@@ -1,52 +1,53 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import LandingPage from "@/components/LandingPage";
 import ResumeBuilder from "@/components/ResumeBuilder";
-import { ResumeData } from "@/types/resume";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
-type UserPath = 'student' | 'employee' | null;
+export default function Index() {
+  const [selectedPath, setSelectedPath] = useState<'student' | 'employee' | null>(null);
 
-const Index = () => {
-  const [currentView, setCurrentView] = useState<'landing' | 'builder'>('landing');
-  const [userPath, setUserPath] = useState<UserPath>(null);
-  const [importedResumeData, setImportedResumeData] = useState<ResumeData | null>(null);
-
-  const handleSelectPath = (path: UserPath) => {
-    setUserPath(path);
-    setCurrentView('builder');
-  };
-
-  const handleResumeImport = (resumeData: ResumeData) => {
-    setImportedResumeData(resumeData);
-    // Auto-detect user type based on imported data
-    const hasWorkExperience = resumeData.workExperience && resumeData.workExperience.length > 0;
-    const userType = hasWorkExperience ? 'employee' : 'student';
-    setUserPath(userType);
-    setCurrentView('builder');
+  const handlePathSelection = (path: 'student' | 'employee') => {
+    setSelectedPath(path);
   };
 
   const handleBackToHome = () => {
-    setCurrentView('landing');
-    setUserPath(null);
-    setImportedResumeData(null);
+    setSelectedPath(null);
   };
 
   return (
-    <>
-      {currentView === 'landing' && (
-        <LandingPage 
-          onSelectPath={handleSelectPath} 
-          onResumeImport={handleResumeImport}
-        />
-      )}
-      {currentView === 'builder' && userPath && (
-        <ResumeBuilder 
-          userType={userPath} 
-          onBack={handleBackToHome}
-          initialData={importedResumeData}
-        />
-      )}
-    </>
-  );
-};
+    <div className="min-h-screen bg-background">
+      {/* Enhanced Navbar */}
+      <Navbar />
+      
+      {/* Main Content */}
+      <main className="pt-20">
+        {selectedPath ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+          >
+            <ResumeBuilder 
+              userType={selectedPath} 
+              onBack={handleBackToHome}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <LandingPage onSelectPath={handlePathSelection} />
+          </motion.div>
+        )}
+      </main>
 
-export default Index;
+      {/* Enhanced Footer */}
+      <Footer />
+    </div>
+  );
+}

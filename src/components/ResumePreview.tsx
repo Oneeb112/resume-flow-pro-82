@@ -41,6 +41,19 @@ const ResumePreview = ({ data }: ResumePreviewProps) => {
         </div>
       </div>
 
+      {/* Professional Summary */}
+      <div className="mb-6">
+        <h2 className="text-lg font-bold text-gray-900 border-b border-gray-300 pb-1 mb-3">
+          PROFESSIONAL SUMMARY
+        </h2>
+        <p className="text-gray-700 leading-relaxed">
+          {data.personalInfo.fullName ? 
+            `Experienced ${data.workExperience.length > 0 ? 'professional' : 'individual'} with expertise in ${data.skills.technical.length > 0 ? data.skills.technical.slice(0, 3).join(', ') : 'various technical skills'}. ${data.education.length > 0 ? `Holds a ${data.education[0]?.degree || 'degree'} in ${data.education[0]?.field || 'relevant field'}.` : ''} Demonstrated ability to deliver results and drive success in challenging environments.` :
+            'Results-driven professional with strong technical skills and proven track record of delivering high-quality solutions. Committed to continuous learning and professional development.'
+          }
+        </p>
+      </div>
+
       {/* Education */}
       {data.education.length > 0 && (
         <div className="mb-6">

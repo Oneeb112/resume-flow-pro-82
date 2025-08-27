@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -9,8 +9,9 @@ import WorkExperienceForm from "./forms/WorkExperienceForm";
 import SkillsForm from "./forms/SkillsForm";
 import ProjectsForm from "./forms/ProjectsForm";
 import ResumePreview from "./ResumePreview";
-import { generatePDF } from "@/lib/pdfGenerator";
+import { generateSimplePDF } from "@/lib/pdfGenerator";
 import { ResumeData } from "@/types/resume";
+import { useToast } from "@/components/ui/use-toast";
 
 interface ResumeBuilderProps {
   userType: 'student' | 'employee';
@@ -70,10 +71,41 @@ const ResumeBuilder = ({ userType, onBack, initialData }: ResumeBuilderProps) =>
   };
 
   const handleDownload = () => {
-    generatePDF(resumeData);
+    generateSimplePDF(resumeData);
   };
 
   const CurrentFormComponent = steps[currentStep].component;
+
+  const { toast } = useToast();
+
+  // Load imported resume data from localStorage when component mounts
+  useEffect(() => {
+    const importedData = localStorage.getItem('importedResumeData');
+    if (importedData) {
+      try {
+        const parsedData = JSON.parse(importedData);
+        setResumeData(parsedData);
+        
+        // Clear the imported data from localStorage after loading
+        localStorage.removeItem('importedResumeData');
+        
+        // Show success message
+        toast({
+          title: "Resume Data Loaded!",
+          description: "Your imported resume data has been successfully loaded. You can now edit and customize it.",
+        });
+        
+        console.log('Loaded imported resume data:', parsedData);
+      } catch (error) {
+        console.error('Error parsing imported resume data:', error);
+        toast({
+          title: "Error Loading Data",
+          description: "There was an error loading your imported resume data.",
+          variant: "destructive",
+        });
+      }
+    }
+  }, [toast]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">

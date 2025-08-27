@@ -1,73 +1,152 @@
-# Welcome to your Lovable project
+# AI-Powered Resume Builder
 
-## Project info
+A professional, ATS-friendly resume builder with enhanced UI, animations, and smart import functionality.
 
-**URL**: https://lovable.dev/projects/fcc31d6a-9359-42f1-ae21-794b02392af0
+## ✨ Enhanced Features
 
-## How can I edit this code?
+### 🎨 **Professional UI & Theme**
+- **Modern Design System**: Clean, professional interface with glass morphism effects
+- **Enhanced Typography**: Inter + Playfair Display + JetBrains Mono fonts for optimal readability
+- **Responsive Layout**: Mobile-first design that works perfectly on all devices
+- **Color System**: Professional blue gradient palette with proper contrast ratios
 
-There are several ways of editing your application.
+### 🚀 **Advanced Animations**
+- **Staggered Entrances**: Smooth, timed animations for all page elements
+- **Interactive Hover Effects**: Subtle animations on cards, buttons, and icons
+- **Floating Particles**: Dynamic background elements for visual interest
+- **Spring Physics**: Natural, bouncy animations using Framer Motion
 
-**Use Lovable**
+### 📁 **Smart Import System**
+- **Multiple Resume Templates**: Student, Professional, and Creative profiles
+- **Intelligent Parsing**: Automatically detects resume type based on filename
+- **File Validation**: Supports PDF, Word documents, and text files (max 10MB)
+- **Loading States**: Professional feedback during import process
+- **Enhanced Data**: Rich, realistic dummy data for testing
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/fcc31d6a-9359-42f1-ae21-794b02392af0) and start prompting.
+### 🎯 **User Experience**
+- **Drag & Drop**: Intuitive file upload with visual feedback
+- **Path Selection**: Clear student vs. professional career paths
+- **Floating Action Button**: Quick access to primary actions
+- **Scroll Progress**: Visual indicator of page progression
+- **Custom Scrollbar**: Branded scrollbar design
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠️ Technical Implementation
 
-**Use your preferred IDE**
+### **Frontend Stack**
+- **React 18** with TypeScript
+- **Tailwind CSS** for utility-first styling
+- **Framer Motion** for smooth animations
+- **Lucide React** for consistent iconography
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### **Design System**
+- **CSS Variables**: Centralized color and spacing tokens
+- **Component Classes**: Reusable styling patterns
+- **Animation Utilities**: Custom keyframes and transitions
+- **Responsive Breakpoints**: Mobile-first approach
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### **Performance**
+- **Font Optimization**: Google Fonts with proper preloading
+- **Lazy Loading**: Efficient component rendering
+- **Optimized Animations**: Hardware-accelerated transforms
+- **Minimal Bundle**: Tree-shaking and code splitting
 
-Follow these steps:
+## 🚀 Getting Started
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### **Prerequisites**
+- Node.js 18+ 
+- npm or yarn
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### **Installation**
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd ats-resume-builder
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### **Testing Import Functionality**
+1. Download the `demo-resume.json` file
+2. Upload it through the import interface
+3. Watch the smart parsing in action!
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🎨 Customization
 
-**Use GitHub Codespaces**
+### **Colors & Theme**
+Edit `src/index.css` to modify:
+- Primary color palette
+- Gradient definitions
+- Shadow values
+- Animation timings
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### **Typography**
+Update `tailwind.config.ts` for:
+- Font family changes
+- Size scale adjustments
+- Line height modifications
 
-## What technologies are used for this project?
+### **Animations**
+Modify `src/components/LandingPage.tsx` to:
+- Adjust animation delays
+- Change transition curves
+- Add new motion variants
 
-This project is built with:
+## 📱 Responsive Design
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+The application is fully responsive with:
+- **Mobile**: 320px+ (optimized touch interactions)
+- **Tablet**: 768px+ (enhanced layouts)
+- **Desktop**: 1024px+ (full feature set)
+- **Large**: 1440px+ (expanded content)
 
-## How can I deploy this project?
+## 🔧 Development
 
-Simply open [Lovable](https://lovable.dev/projects/fcc31d6a-9359-42f1-ae21-794b02392af0) and click on Share -> Publish.
+### **File Structure**
+```
+src/
+├── components/          # Reusable UI components
+├── pages/              # Page-level components
+├── hooks/              # Custom React hooks
+├── utils/              # Helper functions
+├── index.css           # Global styles and design system
+└── App.tsx            # Main application component
+```
 
-## Can I connect a custom domain to my Lovable project?
+### **Key Components**
+- **LandingPage**: Main homepage with enhanced animations
+- **FloatingActionButton**: Quick action access
+- **ScrollIndicator**: Progress visualization
+- **LoadingSpinner**: Professional loading states
 
-Yes, you can!
+## 🎯 Future Enhancements
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- [ ] Dark mode support
+- [ ] More resume templates
+- [ ] Advanced AI suggestions
+- [ ] Export to multiple formats
+- [ ] Collaboration features
+- [ ] Analytics dashboard
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📞 Support
+
+For questions or support, please open an issue in the repository.
+
+---
+
+**Built with ❤️ using modern web technologies**
