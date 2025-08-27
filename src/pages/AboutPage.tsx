@@ -242,11 +242,11 @@ const AboutPage = () => {
         </section>
 
         {/* Story Section */}
-        <section ref={storyRef} className="py-24 bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 relative overflow-hidden">
+        <section ref={storyRef} className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 relative overflow-hidden">
           {/* Background decorative elements */}
           <div className="absolute inset-0">
-            <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary/10 to-purple-500/10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-r from-blue-500/10 to-primary/10 rounded-full blur-3xl"></div>
+            <div className="absolute top-10 sm:top-20 left-5 sm:left-10 w-20 h-20 sm:w-32 sm:h-32 bg-gradient-to-r from-primary/10 to-purple-500/10 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-10 sm:bottom-20 right-5 sm:right-10 w-24 h-24 sm:w-40 sm:h-40 bg-gradient-to-r from-blue-500/10 to-primary/10 rounded-full blur-3xl"></div>
           </div>
           
           <div className="container mx-auto px-4 relative z-10">
@@ -254,37 +254,72 @@ const AboutPage = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={isStoryInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8 }}
-              className="text-center mb-20"
+              className="text-center mb-12 sm:mb-16 lg:mb-20"
             >
               <motion.div
                 initial={{ scale: 0 }}
                 animate={isStoryInView ? { scale: 1 } : {}}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="inline-block mb-6"
+                className="inline-block mb-4 sm:mb-6"
               >
-                <div className="w-16 h-16 bg-gradient-to-r from-primary to-purple-600 rounded-2xl flex items-center justify-center shadow-lg mx-auto">
-                  <FileText className="w-8 h-8 text-white" />
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-primary to-purple-600 rounded-2xl flex items-center justify-center shadow-lg mx-auto">
+                  <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
               </motion.div>
               
-              <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-6">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground mb-4 sm:mb-6">
                 Our{" "}
                 <span className="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
                   Journey
                 </span>
               </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
                 From a simple idea to a revolutionary platform that's transforming how people approach their careers and achieve their professional dreams.
               </p>
             </motion.div>
 
-            {/* Enhanced Story Timeline */}
-            <div className="max-w-5xl mx-auto">
+            {/* Enhanced Story Timeline - Mobile First */}
+            <div className="max-w-4xl lg:max-w-5xl mx-auto">
               <div className="relative">
-                {/* Timeline line */}
-                <div className="absolute left-1/2 transform -translate-x-px w-0.5 h-full bg-gradient-to-b from-primary via-purple-500 to-blue-500"></div>
+                {/* Timeline line - Hidden on mobile, visible on larger screens */}
+                <div className="hidden lg:block absolute left-1/2 transform -translate-x-px w-0.5 h-full bg-gradient-to-b from-primary via-purple-500 to-blue-500"></div>
                 
-                <div className="space-y-16">
+                {/* Mobile Timeline - Vertical layout */}
+                <div className="lg:hidden space-y-6 sm:space-y-8">
+                  {milestones.map((milestone, index) => (
+                    <motion.div
+                      key={milestone.year}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={isStoryInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.6, delay: index * 0.15 }}
+                      className="relative"
+                    >
+                      {/* Mobile Timeline dot */}
+                      <div className="absolute left-4 top-6 w-4 h-4 bg-gradient-to-r from-primary to-purple-600 rounded-full shadow-lg z-10"></div>
+                      
+                      {/* Mobile Content */}
+                      <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        className="bg-white rounded-2xl p-6 sm:p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 ml-12"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-primary to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span className="text-white font-bold text-sm sm:text-lg">{milestone.year}</span>
+                          </div>
+                          <h3 className="text-xl sm:text-2xl font-display font-bold text-foreground">
+                            {milestone.title}
+                          </h3>
+                        </div>
+                        <p className="text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed">
+                          {milestone.description}
+                        </p>
+                      </motion.div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Desktop Timeline - Original alternating layout */}
+                <div className="hidden lg:block space-y-16">
                   {milestones.map((milestone, index) => (
                     <motion.div
                       key={milestone.year}
@@ -333,39 +368,39 @@ const AboutPage = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={isStoryInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="text-center mt-20"
+              className="text-center mt-12 sm:mt-16 lg:mt-20"
             >
-              <div className="bg-gradient-to-r from-primary to-purple-600 rounded-3xl p-12 text-white relative overflow-hidden">
+              <div className="bg-gradient-to-r from-primary to-purple-600 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 text-white relative overflow-hidden mx-2">
                 {/* Background pattern */}
                 <div className="absolute inset-0 opacity-10">
                   <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[length:20px_20px]"></div>
                 </div>
                 
                 <div className="relative z-10">
-                  <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <Star className="w-10 h-10 text-white" />
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                    <Star className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
                   </div>
                   
-                  <h3 className="text-3xl font-display font-bold mb-4">
+                  <h3 className="text-2xl sm:text-3xl font-display font-bold mb-3 sm:mb-4">
                     The Future is Bright
                   </h3>
-                  <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8">
+                  <p className="text-base sm:text-lg lg:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-6 sm:mb-8 px-2">
                     As we continue to grow and innovate, our commitment remains unwavering: to empower every professional with the tools they need to succeed. We're not just building resumes—we're building careers, dreams, and futures.
                   </p>
                   
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                     <Link to="/features">
-                      <Button className="bg-white text-primary hover:bg-gray-50 text-lg px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                      <Button className="bg-white text-primary hover:bg-gray-50 text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                         Explore Our Platform
-                        <ArrowRight className="ml-2 w-5 h-5" />
+                        <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                       </Button>
                     </Link>
                     <Button 
                       variant="outline" 
-                      className="border-white/30 text-white hover:bg-white/20 text-lg px-8 py-4 rounded-xl backdrop-blur-sm transition-all duration-300"
+                      className="border-white/30 text-white hover:bg-white/20 text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-xl backdrop-blur-sm transition-all duration-300"
                     >
                       Join Our Mission
-                      <Users className="ml-2 w-5 h-5" />
+                      <Users className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                     </Button>
                   </div>
                 </div>
