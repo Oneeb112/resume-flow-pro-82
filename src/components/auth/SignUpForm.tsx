@@ -191,7 +191,6 @@ const SignUpForm = () => {
                 <motion.div
                   variants={inputVariants}
                   whileFocus="focus"
-                  whileBlur="blur"
                 >
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -226,7 +225,6 @@ const SignUpForm = () => {
                 <motion.div
                   variants={inputVariants}
                   whileFocus="focus"
-                  whileBlur="blur"
                 >
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -263,7 +261,6 @@ const SignUpForm = () => {
               <motion.div
                 variants={inputVariants}
                 whileFocus="focus"
-                whileBlur="blur"
               >
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -299,7 +296,6 @@ const SignUpForm = () => {
               <motion.div
                 variants={inputVariants}
                 whileFocus="focus"
-                whileBlur="blur"
               >
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -335,7 +331,6 @@ const SignUpForm = () => {
               <motion.div
                 variants={inputVariants}
                 whileFocus="focus"
-                whileBlur="blur"
               >
                 <div className="relative">
                   <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -359,7 +354,6 @@ const SignUpForm = () => {
               <motion.div
                 variants={inputVariants}
                 whileFocus="focus"
-                whileBlur="blur"
               >
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -402,7 +396,6 @@ const SignUpForm = () => {
               <motion.div
                 variants={inputVariants}
                 whileFocus="focus"
-                whileBlur="blur"
               >
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -499,7 +492,7 @@ const SignUpForm = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.8 }}
             >
-              <Button
+              <motion.button
                 type="submit"
                 disabled={isSubmitting}
                 className="w-full btn-hero group"
@@ -518,7 +511,7 @@ const SignUpForm = () => {
                     <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
-              </Button>
+              </motion.button>
             </motion.div>
           </div>
         </motion.form>

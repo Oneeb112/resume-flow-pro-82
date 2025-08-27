@@ -11,26 +11,49 @@ export const generatePDF = async (resumeData: ResumeData) => {
       return;
     }
 
-    // Add some padding to ensure top content is not clipped
-    const originalPadding = element.style.padding;
-    element.style.padding = '20px';
+    // Create a clone for printing to avoid modifying the original
+    const printElement = element.cloneNode(true) as HTMLElement;
+    printElement.style.position = 'absolute';
+    printElement.style.left = '-9999px';
+    printElement.style.top = '0';
+    printElement.style.width = '794px'; // A4 width in pixels at 96 DPI
+    printElement.style.minHeight = '1123px'; // A4 height in pixels at 96 DPI
+    printElement.style.padding = '40px';
+    printElement.style.backgroundColor = '#ffffff';
+    printElement.style.fontSize = '14px';
+    printElement.style.lineHeight = '1.5';
+    printElement.style.fontFamily = 'Arial, sans-serif';
     
-    // Generate canvas from HTML with better settings
-    const canvas = await html2canvas(element, {
+    // Add print-specific styles to improve rendering
+    const style = document.createElement('style');
+    style.textContent = `
+      @media print {
+        * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
+        .shadow-sm, .shadow-md, .shadow-lg { box-shadow: none !important; }
+        .border { border: 1px solid #e5e7eb !important; }
+      }
+    `;
+    printElement.appendChild(style);
+    
+    document.body.appendChild(printElement);
+    
+    // Generate canvas from HTML with optimized settings for PDF
+    const canvas = await html2canvas(printElement, {
       scale: 2,
       useCORS: true,
       allowTaint: true,
       backgroundColor: '#ffffff',
-      scrollX: 0,
-      scrollY: 0,
-      width: element.scrollWidth,
-      height: element.scrollHeight,
-      windowWidth: element.scrollWidth,
-      windowHeight: element.scrollHeight
+      width: 794,
+      height: printElement.scrollHeight,
+      windowWidth: 794,
+      windowHeight: printElement.scrollHeight,
+      ignoreElements: (element) => {
+        return element.classList.contains('no-print');
+      }
     });
 
-    // Restore original padding
-    element.style.padding = originalPadding;
+    // Remove the clone
+    document.body.removeChild(printElement);
 
     const imgData = canvas.toDataURL('image/png');
     

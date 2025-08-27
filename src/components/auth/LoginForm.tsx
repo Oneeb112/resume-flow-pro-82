@@ -168,7 +168,6 @@ const LoginForm = () => {
               <motion.div
                 variants={inputVariants}
                 whileFocus="focus"
-                whileBlur="blur"
               >
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -204,7 +203,6 @@ const LoginForm = () => {
               <motion.div
                 variants={inputVariants}
                 whileFocus="focus"
-                whileBlur="blur"
               >
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -296,7 +294,7 @@ const LoginForm = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.7 }}
             >
-              <Button
+              <motion.button
                 type="submit"
                 disabled={isSubmitting}
                 className="w-full btn-hero group py-3 sm:py-4 text-base sm:text-lg"
@@ -315,7 +313,7 @@ const LoginForm = () => {
                     <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
-              </Button>
+              </motion.button>
             </motion.div>
           </div>
         </motion.form>
@@ -341,29 +339,27 @@ const LoginForm = () => {
           transition={{ duration: 0.5, delay: 0.9 }}
           className="space-y-3 sm:space-y-4"
         >
-          <Button
+          <motion.button
             type="button"
-            variant="outline"
             onClick={() => handleSocialLogin("github")}
-            className="w-full bg-white/80 backdrop-blur-sm border border-border/50 hover:bg-white hover:shadow-medium transition-all duration-300 group py-3 sm:py-4"
+            className="w-full bg-white/80 backdrop-blur-sm border border-border/50 hover:bg-white hover:shadow-medium transition-all duration-300 group py-3 sm:py-4 rounded-lg"
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
           >
             <Github className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 group-hover:scale-110 transition-transform" />
             <span className="text-sm sm:text-base">Continue with GitHub</span>
-          </Button>
+          </motion.button>
 
-          <Button
+          <motion.button
             type="button"
-            variant="outline"
             onClick={() => handleSocialLogin("linkedin")}
-            className="w-full bg-white/80 backdrop-blur-sm border border-border/50 hover:bg-white hover:shadow-medium transition-all duration-300 group py-3 sm:py-4"
+            className="w-full bg-white/80 backdrop-blur-sm border border-border/50 hover:bg-white hover:shadow-medium transition-all duration-300 group py-3 sm:py-4 rounded-lg"
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
           >
             <Linkedin className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 group-hover:scale-110 transition-transform" />
             <span className="text-sm sm:text-base">Continue with LinkedIn</span>
-          </Button>
+          </motion.button>
         </motion.div>
 
         {/* Footer */}
