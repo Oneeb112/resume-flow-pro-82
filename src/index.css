@@ -222,7 +222,7 @@
 
   /* Path Selection Cards */
   .path-card {
-    @apply card-glass p-10 text-center cursor-pointer relative overflow-hidden transition-all duration-500;
+    @apply card-glass p-6 md:p-10 text-center cursor-pointer relative overflow-hidden transition-all duration-500;
   }
 
   .path-card:hover {

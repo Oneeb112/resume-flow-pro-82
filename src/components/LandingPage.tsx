@@ -517,7 +517,7 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
             Choose Your Path
           </motion.h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
             {/* Student Path */}
             <motion.div
               variants={staggerItem}
@@ -531,10 +531,10 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
                 transition={{ type: "spring", stiffness: 300 }}
                 className="relative z-10 mb-6"
               >
-                <GraduationCap className="w-24 h-24 text-primary mx-auto drop-shadow-lg" />
+                <GraduationCap className="w-16 h-16 md:w-24 md:h-24 text-primary mx-auto drop-shadow-lg" />
               </motion.div>
-              <h3 className="text-3xl font-display font-semibold mb-6 text-foreground">I am a Student</h3>
-              <p className="text-muted-foreground mb-10 text-lg leading-relaxed">
+              <h3 className="text-2xl md:text-3xl font-display font-semibold mb-4 md:mb-6 text-foreground">I am a Student</h3>
+              <p className="text-muted-foreground mb-6 md:mb-10 text-base md:text-lg leading-relaxed">
                 Perfect for students, recent graduates, and those starting their careers. 
                 Focus on education, projects, and potential.
               </p>
@@ -557,10 +557,10 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
                 transition={{ type: "spring", stiffness: 300 }}
                 className="relative z-10 mb-6"
               >
-                <Briefcase className="w-24 h-24 text-primary mx-auto drop-shadow-lg" />
+                <Briefcase className="w-16 h-16 md:w-24 md:h-24 text-primary mx-auto drop-shadow-lg" />
               </motion.div>
-              <h3 className="text-3xl font-display font-semibold mb-6 text-foreground">I am an Employee</h3>
-              <p className="text-muted-foreground mb-10 text-lg leading-relaxed">
+              <h3 className="text-2xl md:text-3xl font-display font-semibold mb-4 md:mb-6 text-foreground">I am an Employee</h3>
+              <p className="text-muted-foreground mb-6 md:mb-10 text-base md:text-lg leading-relaxed">
                 Ideal for working professionals looking to advance their careers. 
                 Highlight experience, achievements, and expertise.
               </p>
@@ -586,7 +586,7 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
           >
             Why Choose Our Resume Builder?
           </motion.h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
             {features.map((feature, index) => (
               <motion.div
                 key={index}
@@ -615,7 +615,7 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
           animate={isStatsInView ? "visible" : "hidden"}
           className="text-center"
         >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12">
             {stats.map((stat, index) => (
               <motion.div
                 key={index}

@@ -17,7 +17,6 @@ import {
   Linkedin,
   Twitter,
   Github,
-  Globe,
   Users,
   FileText,
   Zap
@@ -80,8 +79,7 @@ const ContactPage = () => {
   const socialLinks = [
     { icon: Linkedin, href: "#", label: "LinkedIn" },
     { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Github, href: "#", label: "GitHub" },
-    { icon: Globe, href: "#", label: "Website" }
+    { icon: Github, href: "#", label: "GitHub" }
   ];
 
   const faqs = [

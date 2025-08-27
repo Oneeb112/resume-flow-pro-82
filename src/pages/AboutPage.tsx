@@ -5,8 +5,6 @@ import {
   Users, 
   Target, 
   Award, 
-  Heart, 
-  Globe, 
   Zap, 
   Shield, 
   Lightbulb,
@@ -45,7 +43,7 @@ const AboutPage = () => {
 
   const values = [
     {
-      icon: Heart,
+      icon: Users,
       title: "User-Centric",
       description: "Everything we do is centered around making our users' lives easier and helping them succeed in their careers."
     },
@@ -60,7 +58,7 @@ const AboutPage = () => {
       description: "We continuously push the boundaries of what's possible with AI and technology to deliver better results."
     },
     {
-      icon: Globe,
+      icon: Target,
       title: "Accessibility",
       description: "Making professional resume building accessible to everyone, regardless of their background or experience level."
     }

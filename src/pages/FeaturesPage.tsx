@@ -16,7 +16,6 @@ import {
   TrendingUp,
   Award,
   Clock,
-  Globe,
   Lock,
   BarChart3,
   Smartphone,

@@ -149,4 +149,4 @@ For questions or support, please open an issue in the repository.
 
 ---
 
-**Built with ❤️ using modern web technologies**
+**Built with modern web technologies**

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FileText, Zap, Mail, Phone, MapPin, Linkedin, Twitter, Github, Heart } from "lucide-react";
+import { FileText, Zap, Mail, Phone, MapPin, Linkedin, Twitter, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Footer = () => {
@@ -88,9 +88,9 @@ const Footer = () => {
                   <Zap className="w-2.5 h-2.5 text-white" />
                 </motion.div>
               </div>
-              <span className="text-3xl font-display font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                ResumeAI
-              </span>
+                             <span className="text-3xl font-display font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                 ResumeAI
+               </span>
             </div>
             <p className="text-muted-foreground text-lg leading-relaxed mb-6 max-w-md">
               Create professional, ATS-friendly resumes that get you noticed. 
@@ -189,11 +189,9 @@ const Footer = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <span>© {currentYear} ResumeAI. All rights reserved.</span>
-              <span className="hidden sm:inline">•</span>
-              <span className="hidden sm:inline">Made with</span>
-              <Heart className="w-4 h-4 text-red-500 animate-pulse" />
-              <span className="hidden sm:inline">for job seekers</span>
+                             <span>© {currentYear}ResumeAI. All rights reserved.</span>
+               <span className="hidden sm:inline">•</span>
+               <span className="hidden sm:inline">Made with passion for job seekers</span>
             </motion.div>
 
             {/* Social Links */}
