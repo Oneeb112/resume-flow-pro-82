@@ -9,7 +9,7 @@ import WorkExperienceForm from "./forms/WorkExperienceForm";
 import SkillsForm from "./forms/SkillsForm";
 import ProjectsForm from "./forms/ProjectsForm";
 import ResumePreview from "./ResumePreview";
-import { generateSimplePDF } from "@/lib/pdfGenerator";
+import { generatePDF } from "@/lib/pdfGenerator";
 import { ResumeData } from "@/types/resume";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -71,7 +71,7 @@ const ResumeBuilder = ({ userType, onBack, initialData }: ResumeBuilderProps) =>
   };
 
   const handleDownload = () => {
-    generateSimplePDF(resumeData);
+    generatePDF(resumeData);
   };
 
   const CurrentFormComponent = steps[currentStep].component;

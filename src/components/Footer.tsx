@@ -137,12 +137,12 @@ const Footer = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: (sectionIndex * 0.1) + (linkIndex * 0.05) }}
                   >
-                    <a
-                      href={link.href}
+                    <button
+                      type="button"
                       className="text-muted-foreground hover:text-primary transition-colors duration-300 hover:translate-x-1 inline-block"
                     >
                       {link.name}
-                    </a>
+                    </button>
                   </motion.li>
                 ))}
               </ul>
@@ -203,9 +203,9 @@ const Footer = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               {socialLinks.map((social, index) => (
-                <motion.a
+                <motion.button
                   key={social.label}
-                  href={social.href}
+                  type="button"
                   className="w-10 h-10 rounded-full bg-white/80 border border-border/50 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-white hover:shadow-medium transition-all duration-300 group"
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
@@ -215,7 +215,7 @@ const Footer = () => {
                   transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
                 >
                   <social.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                </motion.a>
+                </motion.button>
               ))}
             </motion.div>
           </div>

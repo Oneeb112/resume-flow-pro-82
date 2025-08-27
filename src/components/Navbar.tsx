@@ -85,23 +85,26 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item, index) => (
-              <motion.a
+              <motion.div
                 key={item.name}
-                href={item.href}
-                className="text-foreground/80 hover:text-primary font-medium transition-colors duration-300 relative group"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -2 }}
               >
-                {item.name}
-                <motion.div
-                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary origin-left"
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.a>
+                <Link
+                  to={item.href}
+                  className="text-foreground/80 hover:text-primary font-medium transition-colors duration-300 relative group"
+                >
+                  {item.name}
+                  <motion.div
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary origin-left"
+                    initial={{ scaleX: 0 }}
+                    whileHover={{ scaleX: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </Link>
+              </motion.div>
             ))}
           </div>
 
@@ -161,17 +164,20 @@ const Navbar = () => {
         >
           <div className="py-4 space-y-4 border-t border-border/50">
             {navItems.map((item, index) => (
-              <motion.a
+              <motion.div
                 key={item.name}
-                href={item.href}
-                className="block text-foreground/80 hover:text-primary font-medium transition-colors duration-300 py-2"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
                 onClick={() => setIsOpen(false)}
               >
-                {item.name}
-              </motion.a>
+                <Link
+                  to={item.href}
+                  className="block text-foreground/80 hover:text-primary font-medium transition-colors duration-300 py-2"
+                >
+                  {item.name}
+                </Link>
+              </motion.div>
             ))}
             <div className="pt-4 space-y-3 border-t border-border/50">
               <Link to="/login">
