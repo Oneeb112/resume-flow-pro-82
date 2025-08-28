@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, EyeOff, Lock, Mail, ArrowRight, AlertCircle, Zap, Github, Linkedin } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, AlertCircle, User, Github } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
@@ -57,7 +57,7 @@ const LoginForm = () => {
 
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Handle successful login
       console.log("Login successful:", formData);
@@ -89,24 +89,21 @@ const LoginForm = () => {
     blur: { scale: 1, y: 0 }
   };
 
-  const buttonVariants = {
-    hover: { scale: 1.02, y: -2 },
-    tap: { scale: 0.98 }
-  };
-
   const fillDummyData = () => {
     setFormData({
-      email: "oneeb589@gmail.com",
-      password: "oneeb54321",
+      email: "demo@example.com",
+      password: "demo",
       rememberMe: false
     });
     setErrors({}); // Clear any previous errors
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-light via-white to-blue-50 flex items-center justify-center p-4 sm:p-6">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-light via-white to-blue-50">
-        <div className="absolute inset-0" style={{ background: 'var(--gradient-mesh)' }}></div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-indigo-400/20 to-blue-600/20 rounded-full blur-3xl"></div>
       </div>
 
       <motion.div
@@ -127,42 +124,95 @@ const LoginForm = () => {
             transition={{ type: "spring", stiffness: 300 }}
             className="inline-block mb-4 sm:mb-6"
           >
-            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-primary to-purple-600 rounded-2xl flex items-center justify-center shadow-lg mx-auto">
-              <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl mx-auto">
+              <User className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
             </div>
           </motion.div>
           
-          <h1 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-2">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-gray-900 mb-2">
             Welcome Back
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground px-2">
+          <p className="text-sm sm:text-base text-gray-600 px-2 max-w-sm mx-auto">
             Sign in to continue building your professional resume
           </p>
+        </motion.div>
+
+        {/* Social Login Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="space-y-3 sm:space-y-4 mb-6"
+        >
+          <motion.button
+            type="button"
+            onClick={() => handleSocialLogin("google")}
+            className="w-full bg-white hover:bg-gray-50 text-gray-700 border-2 border-gray-200 hover:border-gray-300 transition-all duration-300 group py-3 sm:py-4 rounded-xl font-medium shadow-sm hover:shadow-md"
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className="flex items-center justify-center space-x-3">
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              <span className="text-sm sm:text-base font-medium">Continue with Google</span>
+            </div>
+          </motion.button>
+
+          <motion.button
+            type="button"
+            onClick={() => handleSocialLogin("github")}
+            className="w-full bg-gray-900 hover:bg-gray-800 text-white border border-gray-700 hover:border-gray-600 transition-all duration-300 group py-3 sm:py-4 rounded-xl font-medium shadow-sm hover:shadow-md"
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className="flex items-center justify-center space-x-3">
+              <Github className="w-5 h-5" />
+              <span className="text-sm sm:text-base font-medium">Continue with GitHub</span>
+            </div>
+          </motion.button>
+        </motion.div>
+
+        {/* Divider */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="my-6 sm:my-8 text-center"
+        >
+          <div className="flex items-center justify-center">
+            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+            <span className="px-4 text-gray-500 text-sm font-medium">or sign in with email</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+          </div>
         </motion.div>
 
         {/* Form */}
         <motion.form
           onSubmit={handleSubmit}
-          className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 sm:p-8 shadow-large border border-white/30"
+          className="bg-white/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/50"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
         >
           {errors.general && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="mb-6 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-xl flex items-center space-x-3"
+              className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center space-x-3"
             >
-              <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 flex-shrink-0" />
+              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
               <span className="text-red-700 text-sm">{errors.general}</span>
             </motion.div>
           )}
 
-          <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-5 sm:space-y-6">
             {/* Email */}
             <div>
-              <Label htmlFor="email" className="text-sm font-medium text-foreground mb-2 block">
+              <Label htmlFor="email" className="text-sm font-semibold text-gray-700 mb-2 block">
                 Email Address
               </Label>
               <motion.div
@@ -170,14 +220,14 @@ const LoginForm = () => {
                 whileFocus="focus"
               >
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <Input
                     id="email"
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
-                    className={`pl-10 pr-4 py-3 sm:py-3 text-base border-2 transition-all duration-300 ${
-                      errors.email ? "border-red-300 focus:border-red-500" : "border-border focus:border-primary"
+                    className={`pl-12 pr-4 py-4 text-base border-2 transition-all duration-300 rounded-xl ${
+                      errors.email ? "border-red-300 focus:border-red-500 focus:ring-red-500/20" : "border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
                     }`}
                     placeholder="john.doe@company.com"
                   />
@@ -186,7 +236,7 @@ const LoginForm = () => {
                   <motion.p
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm mt-1 flex items-center space-x-1"
+                    className="text-red-500 text-sm mt-2 flex items-center space-x-1"
                   >
                     <AlertCircle className="w-3 h-3" />
                     <span>{errors.email}</span>
@@ -197,7 +247,7 @@ const LoginForm = () => {
 
             {/* Password */}
             <div>
-              <Label htmlFor="password" className="text-sm font-medium text-foreground mb-2 block">
+              <Label htmlFor="password" className="text-sm font-semibold text-gray-700 mb-2 block">
                 Password
               </Label>
               <motion.div
@@ -205,21 +255,21 @@ const LoginForm = () => {
                 whileFocus="focus"
               >
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     value={formData.password}
                     onChange={(e) => handleInputChange("password", e.target.value)}
-                    className={`pl-10 pr-12 py-3 sm:py-3 text-base border-2 transition-all duration-300 ${
-                      errors.password ? "border-red-300 focus:border-red-500" : "border-border focus:border-primary"
+                    className={`pl-12 pr-12 py-4 text-base border-2 transition-all duration-300 rounded-xl ${
+                      errors.password ? "border-red-300 focus:border-red-500 focus:ring-red-500/20" : "border-gray-200 focus:border-blue-500 focus:ring-blue-500/20"
                     }`}
                     placeholder="Enter your password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -228,7 +278,7 @@ const LoginForm = () => {
                   <motion.p
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm mt-1 flex items-center space-x-1"
+                    className="text-red-500 text-sm mt-2 flex items-center space-x-1"
                   >
                     <AlertCircle className="w-3 h-3" />
                     <span>{errors.password}</span>
@@ -251,7 +301,7 @@ const LoginForm = () => {
                   onCheckedChange={(checked) => handleInputChange("rememberMe", checked as boolean)}
                   className="w-4 h-4 sm:w-5 sm:h-5"
                 />
-                <Label htmlFor="rememberMe" className="text-sm text-foreground cursor-pointer">
+                <Label htmlFor="rememberMe" className="text-sm text-gray-700 cursor-pointer">
                   Remember me
                 </Label>
               </motion.div>
@@ -264,7 +314,7 @@ const LoginForm = () => {
               >
                 <Link
                   to="/forgot-password"
-                  className="text-sm text-primary hover:underline font-medium"
+                  className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
                 >
                   Forgot password?
                 </Link>
@@ -282,96 +332,37 @@ const LoginForm = () => {
                 type="button"
                 variant="outline"
                 onClick={fillDummyData}
-                className="w-full text-xs sm:text-sm py-2.5 sm:py-3"
+                className="w-full text-xs sm:text-sm py-3 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 rounded-xl"
               >
-                🧪 Fill Test Data (oneeb589@gmail.com / oneeb54321)
+                🧪 Fill Test Data (demo@example.com / demo123)
               </Button>
             </motion.div>
 
             {/* Submit Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.7 }}
+            <motion.button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn-sign-in"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <motion.button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full btn-hero group py-3 sm:py-4 text-base sm:text-lg"
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2 sm:mr-3" />
-                    Signing In...
-                  </>
-                ) : (
-                  <>
-                    Sign In
-                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </>
-                )}
-              </motion.button>
-            </motion.div>
+              <span className="btn-text">
+                {isSubmitting ? "Signing In..." : "Sign In"}
+              </span>
+            </motion.button>
           </div>
         </motion.form>
-
-        {/* Divider */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-          className="my-6 sm:my-8 text-center"
-        >
-          <div className="flex items-center justify-center">
-            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
-            <span className="px-3 sm:px-4 text-muted-foreground text-sm font-medium">or continue with</span>
-            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
-          </div>
-        </motion.div>
-
-        {/* Social Login Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.9 }}
-          className="space-y-3 sm:space-y-4"
-        >
-          <motion.button
-            type="button"
-            onClick={() => handleSocialLogin("github")}
-            className="w-full bg-white/80 backdrop-blur-sm border border-border/50 hover:bg-white hover:shadow-medium transition-all duration-300 group py-3 sm:py-4 rounded-lg"
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Github className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 group-hover:scale-110 transition-transform" />
-            <span className="text-sm sm:text-base">Continue with GitHub</span>
-          </motion.button>
-
-          <motion.button
-            type="button"
-            onClick={() => handleSocialLogin("linkedin")}
-            className="w-full bg-white/80 backdrop-blur-sm border border-border/50 hover:bg-white hover:shadow-medium transition-all duration-300 group py-3 sm:py-4 rounded-lg"
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Linkedin className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 group-hover:scale-110 transition-transform" />
-            <span className="text-sm sm:text-base">Continue with LinkedIn</span>
-          </motion.button>
-        </motion.div>
 
         {/* Footer */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 1 }}
+          transition={{ duration: 0.5, delay: 0.8 }}
           className="text-center mt-6 sm:mt-8"
         >
-          <p className="text-sm sm:text-base text-muted-foreground">
+          <p className="text-sm sm:text-base text-gray-600">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-primary hover:underline font-medium">
+            <Link to="/signup" className="text-blue-600 hover:text-blue-700 font-semibold transition-colors">
               Sign up here
             </Link>
           </p>

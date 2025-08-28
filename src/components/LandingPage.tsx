@@ -2,7 +2,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { GraduationCap, Briefcase, FileText, Zap, Upload, Download, Star, Users, CheckCircle, Loader2, ArrowRight, Sparkles } from "lucide-react";
+import { GraduationCap, Briefcase, FileText, Zap, Upload, Download, Star, Users, CheckCircle, Loader2, ArrowRight, Sparkles, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 // import FloatingActionButton from "@/components/FloatingActionButton";
 
@@ -290,6 +290,11 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
       icon: CheckCircle,
       title: "Real-time Preview",
       description: "See changes instantly as you build your perfect resume."
+    },
+    {
+      icon: Calendar,
+      title: "Smart Date Picker",
+      description: "Professional month/year calendar picker for easy date selection in forms."
     }
   ];
 
@@ -605,6 +610,25 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
               </motion.div>
             ))}
           </div>
+          
+          {/* Calendar Demo Link */}
+          <motion.div
+            variants={staggerItem}
+            className="text-center mt-12"
+          >
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="group hover:bg-primary hover:text-white transition-all duration-300"
+            >
+              <a href="/calendar" className="flex items-center gap-2">
+                <Calendar className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                Try Our Month/Year Picker Calendar
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </a>
+            </Button>
+          </motion.div>
         </motion.section>
 
         {/* Enhanced Stats Section */}

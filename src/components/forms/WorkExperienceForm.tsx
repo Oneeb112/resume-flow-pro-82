@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Calendar } from "lucide-react";
 import { ResumeData, WorkExperience } from "@/types/resume";
+import MonthYearPicker from "@/components/ui/calendar";
 
 interface WorkExperienceFormProps {
   data: ResumeData;
@@ -13,6 +13,26 @@ interface WorkExperienceFormProps {
 }
 
 const WorkExperienceForm = ({ data, onChange }: WorkExperienceFormProps) => {
+  const [showStartDatePicker, setShowStartDatePicker] = useState<string | null>(null);
+  const [showEndDatePicker, setShowEndDatePicker] = useState<string | null>(null);
+  const startDatePickerRef = useRef<HTMLDivElement>(null);
+  const endDatePickerRef = useRef<HTMLDivElement>(null);
+
+  // Close date pickers when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (startDatePickerRef.current && !startDatePickerRef.current.contains(event.target as Node)) {
+        setShowStartDatePicker(null);
+      }
+      if (endDatePickerRef.current && !endDatePickerRef.current.contains(event.target as Node)) {
+        setShowEndDatePicker(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const addWorkExperience = () => {
     const newExperience: WorkExperience = {
       id: Date.now().toString(),
@@ -33,12 +53,17 @@ const WorkExperienceForm = ({ data, onChange }: WorkExperienceFormProps) => {
   };
 
   const updateWorkExperience = (id: string, field: string, value: string | boolean | string[]) => {
-    onChange({
+    console.log('updateWorkExperience called:', { id, field, value }); // Debug log
+    
+    const updatedData = {
       ...data,
       workExperience: data.workExperience.map(exp => 
         exp.id === id ? { ...exp, [field]: value } : exp
       )
-    });
+    };
+    
+    console.log('Updated data:', updatedData); // Debug log
+    onChange(updatedData);
   };
 
   const removeWorkExperience = (id: string) => {
@@ -56,6 +81,67 @@ const WorkExperienceForm = ({ data, onChange }: WorkExperienceFormProps) => {
   const updateAchievements = (id: string, achievements: string) => {
     const achievementsList = achievements.split('\n').filter(a => a.trim());
     updateWorkExperience(id, 'achievements', achievementsList);
+  };
+
+  const formatDateForDisplay = (dateString: string) => {
+    if (!dateString) return "Select Date";
+    if (dateString === "Present") return "Present";
+    const [year, month] = dateString.split('-');
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    return `${monthNames[parseInt(month) - 1]} ${year}`;
+  };
+
+  const handleDateChange = (id: string, field: 'startDate' | 'endDate', value: { month: number; year: number } | "Present") => {
+    console.log('handleDateChange called:', { id, field, value }); // Debug log
+    
+    if (value === "Present") {
+      console.log('Setting Present for:', field); // Debug log
+      updateWorkExperience(id, field, "Present");
+      // Only set current to true if this is an end date change
+      if (field === 'endDate') {
+        updateWorkExperience(id, 'current', true);
+      }
+    } else {
+      const month = (value.month + 1).toString().padStart(2, '0');
+      const dateString = `${value.year}-${month}`;
+      console.log('Setting date:', dateString, 'for:', field); // Debug log
+      updateWorkExperience(id, field, dateString);
+      // Only set current to false if this is an end date change
+      if (field === 'endDate') {
+        updateWorkExperience(id, 'current', false);
+      }
+    }
+    
+    // Close the date picker
+    if (field === 'startDate') {
+      setShowStartDatePicker(null);
+    } else {
+      setShowEndDatePicker(null);
+    }
+  };
+
+  const parseDateString = (dateString: string) => {
+    if (!dateString || dateString === "Present") return { month: new Date().getMonth(), year: new Date().getFullYear() };
+    const [year, month] = dateString.split('-');
+    return { month: parseInt(month) - 1, year: parseInt(year) };
+  };
+
+  // Handle the "Currently working here" toggle
+  const handleCurrentToggle = (id: string, checked: boolean) => {
+    console.log('handleCurrentToggle called:', { id, checked }); // Debug log
+    
+    if (checked) {
+      // Turn ON: Set current to true and end date to "Present"
+      updateWorkExperience(id, 'current', true);
+      updateWorkExperience(id, 'endDate', 'Present');
+    } else {
+      // Turn OFF: Set current to false and clear end date
+      updateWorkExperience(id, 'current', false);
+      updateWorkExperience(id, 'endDate', '');
+    }
   };
 
   return (
@@ -127,36 +213,68 @@ const WorkExperienceForm = ({ data, onChange }: WorkExperienceFormProps) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Start Date *</Label>
-              <Input
-                type="month"
-                value={exp.startDate}
-                onChange={(e) => updateWorkExperience(exp.id, 'startDate', e.target.value)}
-              />
+              <div className="relative">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    console.log('Start Date button clicked for:', exp.id); // Debug log
+                    setShowStartDatePicker(showStartDatePicker === exp.id ? null : exp.id);
+                  }}
+                  className="w-full justify-start text-left font-normal h-12 px-4 border-2 hover:border-primary transition-all duration-200"
+                >
+                  <Calendar className="mr-3 h-4 w-4 text-primary" />
+                  {formatDateForDisplay(exp.startDate)}
+                </Button>
+                
+                {showStartDatePicker === exp.id && (
+                  <div className="absolute top-full left-0 z-50 mt-2" ref={startDatePickerRef}>
+                    <MonthYearPicker
+                      value={parseDateString(exp.startDate)}
+                      onChange={(value) => {
+                        console.log('Start Date MonthYearPicker onChange:', value); // Debug log
+                        handleDateChange(exp.id, 'startDate', value);
+                      }}
+                      isEndDate={false}
+                      className="w-80 shadow-2xl"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
             
-            <div className="space-y-2">
+                        <div className="space-y-2">
               <Label>End Date</Label>
-              <Input
-                type="month"
-                value={exp.endDate}
-                onChange={(e) => updateWorkExperience(exp.id, 'endDate', e.target.value)}
-                disabled={exp.current}
-              />
+              <div className="relative">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    console.log('End Date button clicked for:', exp.id); // Debug log
+                    console.log('Current state:', { current: exp.current, endDate: exp.endDate }); // Debug log
+                    setShowEndDatePicker(showEndDatePicker === exp.id ? null : exp.id);
+                  }}
+                  className={`w-full justify-start text-left font-normal h-12 px-4 border-2 transition-all duration-200 hover:border-primary`}
+                >
+                  <Calendar className="mr-3 h-4 w-4 text-primary" />
+                  {formatDateForDisplay(exp.endDate)}
+                </Button>
+                
+                {showEndDatePicker === exp.id && (
+                                    <div className="absolute top-full left-0 z-50 mt-2" ref={endDatePickerRef}>
+                    <MonthYearPicker
+                      value={exp.current ? "Present" : (exp.endDate ? parseDateString(exp.endDate) : undefined)}
+                      onChange={(value) => {
+                        console.log('End Date MonthYearPicker onChange:', value); // Debug log
+                        handleDateChange(exp.id, 'endDate', value);
+                      }}
+                      isEndDate={true}
+                      className="w-80 shadow-2xl"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id={`current-${exp.id}`}
-              checked={exp.current}
-              onCheckedChange={(checked) => {
-                updateWorkExperience(exp.id, 'current', Boolean(checked));
-                if (checked) {
-                  updateWorkExperience(exp.id, 'endDate', '');
-                }
-              }}
-            />
-            <Label htmlFor={`current-${exp.id}`}>I currently work here</Label>
           </div>
 
           <div className="space-y-2">

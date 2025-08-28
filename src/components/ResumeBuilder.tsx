@@ -125,24 +125,27 @@ const ResumeBuilder = ({ userType, onBack, initialData }: ResumeBuilderProps) =>
             Back to Home
           </Button>
           
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
+          {/* Desktop Preview Button - Always visible */}
+          <div className="hidden lg:flex items-center gap-4">
             <Button
               variant="outline"
               onClick={() => setShowPreview(!showPreview)}
-              className="flex items-center justify-center gap-2 text-sm lg:text-base"
+              className="flex items-center justify-center gap-2 text-base"
             >
               <Eye className="w-4 h-4" />
-              <span className="hidden sm:inline">{showPreview ? 'Hide Preview' : 'Show Preview'}</span>
-              <span className="sm:hidden">{showPreview ? 'Hide' : 'Preview'}</span>
+              {showPreview ? 'Hide Preview' : 'Show Preview'}
             </Button>
             
-            <Button
-              onClick={handleDownload}
-              className="btn-hero flex items-center justify-center gap-2 text-sm lg:text-base"
-            >
-              <Download className="w-4 h-4" />
-              Download PDF
-            </Button>
+            {/* Desktop Download Button - Only in last step */}
+            {currentStep === steps.length - 1 && (
+              <Button
+                onClick={handleDownload}
+                className="btn-hero flex items-center justify-center gap-2 text-sm"
+              >
+                <Download className="w-4 h-4" />
+                Download PDF
+              </Button>
+            )}
           </div>
         </motion.div>
 
@@ -222,14 +225,40 @@ const ResumeBuilder = ({ userType, onBack, initialData }: ResumeBuilderProps) =>
                 Previous
               </Button>
 
+              {/* Hide Next button in last step */}
+              {currentStep < steps.length - 1 && (
+                <Button
+                  onClick={handleNext}
+                  className="btn-hero flex items-center justify-center gap-2 text-sm lg:text-base"
+                >
+                  Next
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
+
+            {/* Mobile Preview and Download Section - Below Form */}
+            <div className="lg:hidden mt-6 space-y-3">
+              {/* Mobile Preview Button */}
               <Button
-                onClick={handleNext}
-                disabled={currentStep === steps.length - 1}
-                className="btn-hero flex items-center justify-center gap-2 text-sm lg:text-base"
+                variant="outline"
+                onClick={() => setShowPreview(!showPreview)}
+                className="w-full flex items-center justify-center gap-2 text-sm"
               >
-                Next
-                <ArrowRight className="w-4 h-4" />
+                <Eye className="w-4 h-4" />
+                {showPreview ? 'Hide Preview' : 'Show Preview'}
               </Button>
+              
+              {/* Mobile Download Button - Only in last step */}
+              {currentStep === steps.length - 1 && (
+                <Button
+                  onClick={handleDownload}
+                  className="btn-hero w-full flex items-center justify-center gap-2 text-sm"
+                >
+                  <Download className="w-4 h-4" />
+                  Download PDF
+                </Button>
+              )}
             </div>
           </motion.div>
 

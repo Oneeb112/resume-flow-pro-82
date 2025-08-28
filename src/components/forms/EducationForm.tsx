@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Calendar } from "lucide-react";
 import { ResumeData, Education } from "@/types/resume";
+import MonthYearPicker from "@/components/ui/calendar";
 
 interface EducationFormProps {
   data: ResumeData;
@@ -12,6 +13,26 @@ interface EducationFormProps {
 }
 
 const EducationForm = ({ data, onChange }: EducationFormProps) => {
+  const [showStartDatePicker, setShowStartDatePicker] = useState<string | null>(null);
+  const [showEndDatePicker, setShowEndDatePicker] = useState<string | null>(null);
+  const startDatePickerRef = useRef<HTMLDivElement>(null);
+  const endDatePickerRef = useRef<HTMLDivElement>(null);
+
+  // Close date pickers when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (startDatePickerRef.current && !startDatePickerRef.current.contains(event.target as Node)) {
+        setShowStartDatePicker(null);
+      }
+      if (endDatePickerRef.current && !endDatePickerRef.current.contains(event.target as Node)) {
+        setShowEndDatePicker(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const addEducation = () => {
     const newEducation: Education = {
       id: Date.now().toString(),
@@ -49,6 +70,40 @@ const EducationForm = ({ data, onChange }: EducationFormProps) => {
   const updateAchievements = (id: string, achievements: string) => {
     const achievementsList = achievements.split('\n').filter(a => a.trim());
     updateEducation(id, 'achievements', achievementsList);
+  };
+
+  const formatDateForDisplay = (dateString: string) => {
+    if (!dateString) return "Select Date";
+    if (dateString === "Present") return "Present";
+    const [year, month] = dateString.split('-');
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    return `${monthNames[parseInt(month) - 1]} ${year}`;
+  };
+
+  const handleDateChange = (id: string, field: 'startDate' | 'endDate', value: { month: number; year: number } | "Present") => {
+    if (value === "Present") {
+      updateEducation(id, field, "Present");
+    } else {
+      const month = (value.month + 1).toString().padStart(2, '0');
+      const dateString = `${value.year}-${month}`;
+      updateEducation(id, field, dateString);
+    }
+    
+    // Close the date picker
+    if (field === 'startDate') {
+      setShowStartDatePicker(null);
+    } else {
+      setShowEndDatePicker(null);
+    }
+  };
+
+  const parseDateString = (dateString: string) => {
+    if (!dateString || dateString === "Present") return { month: new Date().getMonth(), year: new Date().getFullYear() };
+    const [year, month] = dateString.split('-');
+    return { month: parseInt(month) - 1, year: parseInt(year) };
   };
 
   return (
@@ -131,20 +186,54 @@ const EducationForm = ({ data, onChange }: EducationFormProps) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Start Date *</Label>
-              <Input
-                type="month"
-                value={edu.startDate}
-                onChange={(e) => updateEducation(edu.id, 'startDate', e.target.value)}
-              />
+              <div className="relative">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowStartDatePicker(showStartDatePicker === edu.id ? null : edu.id)}
+                  className="w-full justify-start text-left font-normal h-12 px-4 border-2 hover:border-primary transition-all duration-200"
+                >
+                  <Calendar className="mr-3 h-4 w-4 text-primary" />
+                  {formatDateForDisplay(edu.startDate)}
+                </Button>
+                
+                {showStartDatePicker === edu.id && (
+                  <div className="absolute top-full left-0 z-50 mt-2" ref={startDatePickerRef}>
+                    <MonthYearPicker
+                      value={parseDateString(edu.startDate)}
+                      onChange={(value) => handleDateChange(edu.id, 'startDate', value)}
+                      isEndDate={false}
+                      className="w-80 shadow-2xl"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
             
             <div className="space-y-2">
               <Label>End Date *</Label>
-              <Input
-                type="month"
-                value={edu.endDate}
-                onChange={(e) => updateEducation(edu.id, 'endDate', e.target.value)}
-              />
+              <div className="relative">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowEndDatePicker(showEndDatePicker === edu.id ? null : edu.id)}
+                  className="w-full justify-start text-left font-normal h-12 px-4 border-2 hover:border-primary transition-all duration-200"
+                >
+                  <Calendar className="mr-3 h-4 w-4 text-primary" />
+                  {formatDateForDisplay(edu.endDate)}
+                </Button>
+                
+                {showEndDatePicker === edu.id && (
+                  <div className="absolute top-full left-0 z-50 mt-2" ref={endDatePickerRef}>
+                    <MonthYearPicker
+                      value={parseDateString(edu.endDate)}
+                      onChange={(value) => handleDateChange(edu.id, 'endDate', value)}
+                      isEndDate={true}
+                      className="w-80 shadow-2xl"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

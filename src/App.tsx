@@ -11,6 +11,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import FeaturesPage from "./pages/FeaturesPage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
+import CalendarDemoPage from "./pages/CalendarDemoPage";
 import ScrollIndicator from "./components/ScrollIndicator";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ function App() {
               <Route path="/features" element={<FeaturesPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/calendar" element={<CalendarDemoPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -519,3 +519,100 @@
   .bounce-transition {
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
+
+  /* Improved Create Account and Sign In Buttons */
+  .btn-create-account,
+  .btn-sign-in {
+    @apply w-full font-bold py-4 px-6 rounded-xl transition-all duration-300 relative overflow-hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-create-account::before,
+  .btn-sign-in::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+  }
+
+  .btn-create-account:hover::before,
+  .btn-sign-in:hover::before {
+    opacity: 1;
+  }
+
+  .btn-create-account:hover,
+  .btn-sign-in:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+    color: white;
+  }
+
+  .btn-create-account:active,
+  .btn-sign-in:active {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+  }
+
+  .btn-create-account:focus,
+  .btn-sign-in:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+  }
+
+  .btn-create-account:disabled,
+  .btn-sign-in:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Button Text and Icon Styling */
+  .btn-create-account .btn-text,
+  .btn-sign-in .btn-text {
+    @apply relative z-10 font-semibold text-base;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Button Loading State */
+  .btn-create-account.loading,
+  .btn-sign-in.loading {
+    @apply cursor-wait;
+  }
+
+  .btn-create-account.loading .btn-text,
+  .btn-sign-in.loading .btn-text {
+    opacity: 0.7;
+  }
+
+  /* Button Success State */
+  .btn-create-account.success,
+  .btn-sign-in.success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  }
+
+  .btn-create-account.success:hover,
+  .btn-sign-in.success:hover {
+    box-shadow: 0 20px 40px rgba(16, 185, 129, 0.4);
+  }
+
+  /* Button Error State */
+  .btn-create-account.error,
+  .btn-sign-in.error {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  }
+
+  .btn-create-account.error:hover,
+  .btn-sign-in.error:hover {
+    box-shadow: 0 20px 40px rgba(239, 68, 68, 0.4);
+  }
