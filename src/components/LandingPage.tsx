@@ -612,7 +612,7 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
           </div>
           
           {/* Calendar Demo Link */}
-          <motion.div
+          {/* <motion.div
             variants={staggerItem}
             className="text-center mt-12"
           >
@@ -628,7 +628,7 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </a>
             </Button>
-          </motion.div>
+          </motion.div> */}
         </motion.section>
 
         {/* Enhanced Stats Section */}

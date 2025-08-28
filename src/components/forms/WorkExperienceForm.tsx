@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,132 +15,143 @@ interface WorkExperienceFormProps {
 const WorkExperienceForm = ({ data, onChange }: WorkExperienceFormProps) => {
   const [showStartDatePicker, setShowStartDatePicker] = useState<string | null>(null);
   const [showEndDatePicker, setShowEndDatePicker] = useState<string | null>(null);
-  const startDatePickerRef = useRef<HTMLDivElement>(null);
-  const endDatePickerRef = useRef<HTMLDivElement>(null);
 
-  // Close date pickers when clicking outside
+  // Close pickers when clicking outside of any picker or picker button
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (startDatePickerRef.current && !startDatePickerRef.current.contains(event.target as Node)) {
+      const target = event.target as HTMLElement;
+      // if click is NOT inside popup and NOT inside any date button, close pickers
+      if (!target.closest(".month-year-picker-popup") && !target.closest(".date-picker-button")) {
         setShowStartDatePicker(null);
-      }
-      if (endDatePickerRef.current && !endDatePickerRef.current.contains(event.target as Node)) {
         setShowEndDatePicker(null);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const addWorkExperience = () => {
     const newExperience: WorkExperience = {
       id: Date.now().toString(),
-      company: '',
-      position: '',
-      location: '',
-      startDate: '',
-      endDate: '',
+      company: "",
+      position: "",
+      location: "",
+      startDate: "",
+      endDate: "",
       current: false,
       responsibilities: [],
-      achievements: []
+      achievements: [],
     };
-    
+
     onChange({
       ...data,
-      workExperience: [...data.workExperience, newExperience]
+      workExperience: [...data.workExperience, newExperience],
     });
   };
 
-  const updateWorkExperience = (id: string, field: string, value: string | boolean | string[]) => {
-    console.log('updateWorkExperience called:', { id, field, value }); // Debug log
-    
+  // Helper to update multiple fields at once for a single experience
+  const setWorkFields = (id: string, updates: Partial<WorkExperience>) => {
     const updatedData = {
       ...data,
-      workExperience: data.workExperience.map(exp => 
-        exp.id === id ? { ...exp, [field]: value } : exp
-      )
+      workExperience: data.workExperience.map((exp) =>
+        exp.id === id ? { ...exp, ...updates } : exp
+      ),
     };
-    
-    console.log('Updated data:', updatedData); // Debug log
     onChange(updatedData);
   };
 
   const removeWorkExperience = (id: string) => {
     onChange({
       ...data,
-      workExperience: data.workExperience.filter(exp => exp.id !== id)
+      workExperience: data.workExperience.filter((exp) => exp.id !== id),
     });
   };
 
   const updateResponsibilities = (id: string, responsibilities: string) => {
-    const responsibilitiesList = responsibilities.split('\n').filter(r => r.trim());
-    updateWorkExperience(id, 'responsibilities', responsibilitiesList);
+    const responsibilitiesList = responsibilities.split("\n").filter((r) => r.trim());
+    setWorkFields(id, { responsibilities: responsibilitiesList });
   };
 
   const updateAchievements = (id: string, achievements: string) => {
-    const achievementsList = achievements.split('\n').filter(a => a.trim());
-    updateWorkExperience(id, 'achievements', achievementsList);
+    const achievementsList = achievements.split("\n").filter((a) => a.trim());
+    setWorkFields(id, { achievements: achievementsList });
   };
 
   const formatDateForDisplay = (dateString: string) => {
     if (!dateString) return "Select Date";
     if (dateString === "Present") return "Present";
-    const [year, month] = dateString.split('-');
+    const [year, month] = dateString.split("-");
     const monthNames = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
-    return `${monthNames[parseInt(month) - 1]} ${year}`;
+    return `${monthNames[parseInt(month, 10) - 1]} ${year}`;
   };
 
-  const handleDateChange = (id: string, field: 'startDate' | 'endDate', value: { month: number; year: number } | "Present") => {
-    console.log('handleDateChange called:', { id, field, value }); // Debug log
-    
+  // Robust month conversion: accepts both 0-based (0..11) and 1-based (1..12) months
+  const normalizeMonthNumber = (rawMonth: number | string) => {
+    const m = parseInt(String(rawMonth), 10);
+    if (!Number.isFinite(m)) return new Date().getMonth() + 1; // fallback to current month (1-based)
+    if (m >= 0 && m <= 11) return m + 1; // 0-based -> convert to 1-based
+    if (m >= 1 && m <= 12) return m; // already 1-based
+    return new Date().getMonth() + 1; // fallback
+  };
+
+  // Called when user picks (month, year) or selects "Present"
+  const handleDateChange = (
+    id: string,
+    field: "startDate" | "endDate",
+    value: { month: number | string; year: number | string } | "Present"
+  ) => {
     if (value === "Present") {
-      console.log('Setting Present for:', field); // Debug log
-      updateWorkExperience(id, field, "Present");
-      // Only set current to true if this is an end date change
-      if (field === 'endDate') {
-        updateWorkExperience(id, 'current', true);
-      }
+      // set endDate to Present and mark current true only for endDate
+      setWorkFields(id, { [field]: "Present", ...(field === "endDate" ? { current: true } : {}) });
     } else {
-      const month = (value.month + 1).toString().padStart(2, '0');
-      const dateString = `${value.year}-${month}`;
-      console.log('Setting date:', dateString, 'for:', field); // Debug log
-      updateWorkExperience(id, field, dateString);
-      // Only set current to false if this is an end date change
-      if (field === 'endDate') {
-        updateWorkExperience(id, 'current', false);
-      }
+      const year = String(value.year);
+      const monthNum = normalizeMonthNumber(value.month); // 1-based month (1..12)
+      const month = String(monthNum).padStart(2, "0");
+      const dateString = `${year}-${month}`; // YYYY-MM
+      setWorkFields(id, { [field]: dateString, ...(field === "endDate" ? { current: false } : {}) });
     }
-    
-    // Close the date picker
-    if (field === 'startDate') {
+
+    // close corresponding picker
+    if (field === "startDate") {
       setShowStartDatePicker(null);
     } else {
       setShowEndDatePicker(null);
     }
   };
 
+  // Convert stored YYYY-MM or Present to MonthYearPicker value:
+  // MonthYearPicker commonly expects month 0-based (0..11). We'll give it 0-based to match many implementations.
+  // If your picker expects 1-based months, change `month: parseInt(month,10) - 1` to `month: parseInt(month,10)`.
   const parseDateString = (dateString: string) => {
-    if (!dateString || dateString === "Present") return { month: new Date().getMonth(), year: new Date().getFullYear() };
-    const [year, month] = dateString.split('-');
-    return { month: parseInt(month) - 1, year: parseInt(year) };
+    if (!dateString || dateString === "Present") {
+      return { month: new Date().getMonth(), year: new Date().getFullYear() }; // month 0-based
+    }
+    const [year, month] = dateString.split("-");
+    return { month: parseInt(month, 10) - 1, year: parseInt(year, 10) }; // return 0-based month
   };
 
-  // Handle the "Currently working here" toggle
   const handleCurrentToggle = (id: string, checked: boolean) => {
-    console.log('handleCurrentToggle called:', { id, checked }); // Debug log
-    
     if (checked) {
-      // Turn ON: Set current to true and end date to "Present"
-      updateWorkExperience(id, 'current', true);
-      updateWorkExperience(id, 'endDate', 'Present');
+      // mark current and set endDate to Present; also close end picker
+      setWorkFields(id, { current: true, endDate: "Present" });
+      setShowEndDatePicker(null);
     } else {
-      // Turn OFF: Set current to false and clear end date
-      updateWorkExperience(id, 'current', false);
-      updateWorkExperience(id, 'endDate', '');
+      // unset current and clear endDate
+      setWorkFields(id, { current: false, endDate: "" });
     }
   };
 
@@ -186,16 +197,16 @@ const WorkExperienceForm = ({ data, onChange }: WorkExperienceFormProps) => {
               <Label>Company *</Label>
               <Input
                 value={exp.company}
-                onChange={(e) => updateWorkExperience(exp.id, 'company', e.target.value)}
+                onChange={(e) => setWorkFields(exp.id, { company: e.target.value })}
                 placeholder="Tech Corp Inc."
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label>Position *</Label>
               <Input
                 value={exp.position}
-                onChange={(e) => updateWorkExperience(exp.id, 'position', e.target.value)}
+                onChange={(e) => setWorkFields(exp.id, { position: e.target.value })}
                 placeholder="Software Engineer"
               />
             </div>
@@ -205,36 +216,33 @@ const WorkExperienceForm = ({ data, onChange }: WorkExperienceFormProps) => {
             <Label>Location *</Label>
             <Input
               value={exp.location}
-              onChange={(e) => updateWorkExperience(exp.id, 'location', e.target.value)}
+              onChange={(e) => setWorkFields(exp.id, { location: e.target.value })}
               placeholder="San Francisco, CA"
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Start Date */}
             <div className="space-y-2">
               <Label>Start Date *</Label>
               <div className="relative">
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => {
-                    console.log('Start Date button clicked for:', exp.id); // Debug log
-                    setShowStartDatePicker(showStartDatePicker === exp.id ? null : exp.id);
-                  }}
-                  className="w-full justify-start text-left font-normal h-12 px-4 border-2 hover:border-primary transition-all duration-200"
+                  onClick={() =>
+                    setShowStartDatePicker(showStartDatePicker === exp.id ? null : exp.id)
+                  }
+                  className="date-picker-button w-full justify-start text-left font-normal h-12 px-4 border-2 hover:border-primary transition-all duration-200"
                 >
                   <Calendar className="mr-3 h-4 w-4 text-primary" />
                   {formatDateForDisplay(exp.startDate)}
                 </Button>
-                
+
                 {showStartDatePicker === exp.id && (
-                  <div className="absolute top-full left-0 z-50 mt-2" ref={startDatePickerRef}>
+                  <div className="month-year-picker-popup absolute top-full left-0 z-50 mt-2">
                     <MonthYearPicker
                       value={parseDateString(exp.startDate)}
-                      onChange={(value) => {
-                        console.log('Start Date MonthYearPicker onChange:', value); // Debug log
-                        handleDateChange(exp.id, 'startDate', value);
-                      }}
+                      onChange={(value) => handleDateChange(exp.id, "startDate", value)}
                       isEndDate={false}
                       className="w-80 shadow-2xl"
                     />
@@ -242,32 +250,31 @@ const WorkExperienceForm = ({ data, onChange }: WorkExperienceFormProps) => {
                 )}
               </div>
             </div>
-            
-                        <div className="space-y-2">
-              <Label>End Date</Label>
+
+            {/* End Date */}
+            <div className="space-y-2">
+              <Label>End Date *</Label>
               <div className="relative">
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => {
-                    console.log('End Date button clicked for:', exp.id); // Debug log
-                    console.log('Current state:', { current: exp.current, endDate: exp.endDate }); // Debug log
-                    setShowEndDatePicker(showEndDatePicker === exp.id ? null : exp.id);
-                  }}
-                  className={`w-full justify-start text-left font-normal h-12 px-4 border-2 transition-all duration-200 hover:border-primary`}
+                  disabled={exp.current}
+                  onClick={() =>
+                    setShowEndDatePicker(showEndDatePicker === exp.id ? null : exp.id)
+                  }
+                  className={`date-picker-button w-full justify-start text-left font-normal h-12 px-4 border-2 transition-all duration-200 ${
+                    exp.current ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "hover:border-primary"
+                  }`}
                 >
                   <Calendar className="mr-3 h-4 w-4 text-primary" />
                   {formatDateForDisplay(exp.endDate)}
                 </Button>
-                
-                {showEndDatePicker === exp.id && (
-                                    <div className="absolute top-full left-0 z-50 mt-2" ref={endDatePickerRef}>
+
+                {!exp.current && showEndDatePicker === exp.id && (
+                  <div className="month-year-picker-popup absolute top-full left-0 z-50 mt-2">
                     <MonthYearPicker
-                      value={exp.current ? "Present" : (exp.endDate ? parseDateString(exp.endDate) : undefined)}
-                      onChange={(value) => {
-                        console.log('End Date MonthYearPicker onChange:', value); // Debug log
-                        handleDateChange(exp.id, 'endDate', value);
-                      }}
+                      value={parseDateString(exp.endDate)}
+                      onChange={(value) => handleDateChange(exp.id, "endDate", value)}
                       isEndDate={true}
                       className="w-80 shadow-2xl"
                     />
@@ -277,12 +284,28 @@ const WorkExperienceForm = ({ data, onChange }: WorkExperienceFormProps) => {
             </div>
           </div>
 
+          {/* Currently Working Checkbox */}
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id={`current-${exp.id}`}
+              checked={!!exp.current}
+              onChange={(e) => handleCurrentToggle(exp.id, e.target.checked)}
+              className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary focus:ring-2"
+            />
+            <Label htmlFor={`current-${exp.id}`} className="text-sm font-medium">
+              Currently working here
+            </Label>
+          </div>
+
           <div className="space-y-2">
             <Label>Key Responsibilities *</Label>
             <Textarea
-              value={exp.responsibilities.join('\n')}
+              value={exp.responsibilities.join("\n")}
               onChange={(e) => updateResponsibilities(exp.id, e.target.value)}
-              placeholder="Developed and maintained web applications&#10;Collaborated with cross-functional teams&#10;Implemented automated testing procedures"
+              placeholder={`Developed and maintained web applications
+Collaborated with cross-functional teams
+Implemented automated testing procedures`}
               rows={4}
             />
             <p className="text-xs text-muted-foreground">Each line will be a separate bullet point</p>
@@ -291,9 +314,11 @@ const WorkExperienceForm = ({ data, onChange }: WorkExperienceFormProps) => {
           <div className="space-y-2">
             <Label>Key Achievements (Optional)</Label>
             <Textarea
-              value={(exp.achievements || []).join('\n')}
+              value={(exp.achievements || []).join("\n")}
               onChange={(e) => updateAchievements(exp.id, e.target.value)}
-              placeholder="Increased application performance by 40%&#10;Led team of 5 junior developers&#10;Reduced deployment time by 60%"
+              placeholder={`Increased application performance by 40%
+Led team of 5 junior developers
+Reduced deployment time by 60%`}
               rows={3}
             />
             <p className="text-xs text-muted-foreground">Include quantifiable achievements when possible</p>
