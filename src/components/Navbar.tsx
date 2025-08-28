@@ -145,54 +145,56 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Navigation */}
+<motion.div
+  className="md:hidden"
+  initial={false}
+  animate={isOpen ? "open" : "closed"}
+  variants={{
+    open: { 
+      opacity: 1, 
+      height: "auto",
+      transition: { duration: 0.3, ease: "easeOut" }
+    },
+    closed: { 
+      opacity: 0, 
+      height: 0,
+      transition: { duration: 0.3, ease: "easeIn" }
+    }
+  }}
+>
+  {isOpen && (
+    <div className="py-4 space-y-4 border-t border-border/50">
+      {navItems.map((item, index) => (
         <motion.div
-          className="md:hidden"
-          initial={false}
-          animate={isOpen ? "open" : "closed"}
-          variants={{
-            open: { 
-              opacity: 1, 
-              height: "auto",
-              transition: { duration: 0.3, ease: "easeOut" }
-            },
-            closed: { 
-              opacity: 0, 
-              height: 0,
-              transition: { duration: 0.3, ease: "easeIn" }
-            }
-          }}
+          key={item.name}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: index * 0.1 }}
+          onClick={() => setIsOpen(false)}
         >
-          <div className="py-4 space-y-4 border-t border-border/50">
-            {navItems.map((item, index) => (
-              <motion.div
-                key={item.name}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                onClick={() => setIsOpen(false)}
-              >
-                <Link
-                  to={item.href}
-                  className="block text-foreground/80 hover:text-primary font-medium transition-colors duration-300 py-2"
-                >
-                  {item.name}
-                </Link>
-              </motion.div>
-            ))}
-            <div className="pt-4 space-y-3 border-t border-border/50">
-              <Link to="/login">
-                <Button variant="ghost" className="w-full justify-start">
-                  Sign In
-                </Button>
-              </Link>
-              <Link to="/signup">
-                <Button className="w-full btn-hero">
-                  Get Started
-                </Button>
-              </Link>
-            </div>
-          </div>
+          <Link
+            to={item.href}
+            className="block text-foreground/80 hover:text-primary font-medium transition-colors duration-300 py-2"
+          >
+            {item.name}
+          </Link>
         </motion.div>
+      ))}
+      <div className="pt-4 space-y-3 border-t border-border/50">
+        <Link to="/login">
+          <Button variant="ghost" className="w-full justify-start">
+            Sign In
+          </Button>
+        </Link>
+        <Link to="/signup">
+          <Button className="w-full btn-hero">
+            Get Started
+          </Button>
+        </Link>
+      </div>
+    </div>
+  )}
+</motion.div>
       </div>
     </motion.nav>
   );
