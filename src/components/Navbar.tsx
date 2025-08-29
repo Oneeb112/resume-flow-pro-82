@@ -38,7 +38,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: "Home", href: "/" },
-    { name: "Features", href: "/features" },
+    // { name: "Features", href: "/features" },
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" }
   ];
@@ -83,7 +83,7 @@ const Navbar = () => {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-10">
             {navItems.map((item, index) => (
               <motion.div
                 key={item.name}
@@ -94,11 +94,11 @@ const Navbar = () => {
               >
                 <Link
                   to={item.href}
-                  className="text-foreground/80 hover:text-primary font-medium transition-colors duration-300 relative group"
+                  className="text-foreground/80 hover:text-primary font-semibold text-lg transition-colors duration-300 relative group px-4 py-2 rounded-lg hover:bg-gray-50"
                 >
                   {item.name}
                   <motion.div
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary origin-left"
+                    className="absolute -bottom-1 left-0 right-0 h-1 bg-primary origin-left rounded-full"
                     initial={{ scaleX: 0 }}
                     whileHover={{ scaleX: 1 }}
                     transition={{ duration: 0.3 }}
@@ -116,7 +116,7 @@ const Navbar = () => {
               transition={{ duration: 0.5, delay: 0.4 }}
             >
               <Link to="/login">
-                <Button variant="ghost" className="font-medium">
+                <Button variant="ghost" className="font-bold text-lg">
                   Sign In
                 </Button>
               </Link>
@@ -174,15 +174,15 @@ const Navbar = () => {
         >
           <Link
             to={item.href}
-            className="block text-foreground/80 hover:text-primary font-medium transition-colors duration-300 py-2"
+            className="block text-foreground/80 hover:text-primary font-semibold text-lg transition-colors duration-300 py-3 px-4 rounded-lg hover:bg-gray-50"
           >
             {item.name}
           </Link>
         </motion.div>
       ))}
-      <div className="pt-4 space-y-3 border-t border-border/50">
+      <div className="pt-2 space-y-4 border-t border-border/50">
         <Link to="/login">
-          <Button variant="ghost" className="w-full justify-start">
+          <Button variant="ghost" className="w-full justify-start font-bold text-lg">
             Sign In
           </Button>
         </Link>

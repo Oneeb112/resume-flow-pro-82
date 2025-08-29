@@ -10,24 +10,24 @@ const Footer = () => {
       title: "Product",
       links: [
         { name: "Resume Builder", href: "#" },
-        { name: "Templates", href: "#" },
-        { name: "ATS Optimization", href: "#" },
-        { name: "Export Options", href: "#" }
+        // { name: "Templates", href: "#" },
+        // { name: "ATS Optimization", href: "#" },
+        // { name: "Export Options", href: "#" }
       ]
     },
     {
       title: "Company",
       links: [
         { name: "About Us", href: "#" },
-        { name: "Careers", href: "#" },
-        { name: "Press", href: "#" },
-        { name: "Partners", href: "#" }
+        // { name: "Careers", href: "#" },
+        // { name: "Press", href: "#" },
+        // { name: "Partners", href: "#" }
       ]
     },
     {
       title: "Support",
       links: [
-        { name: "Help Center", href: "#" },
+        // { name: "Help Center", href: "#" },
         { name: "Contact Us", href: "#" },
         { name: "Privacy Policy", href: "#" },
         { name: "Terms of Service", href: "#" }
@@ -36,9 +36,9 @@ const Footer = () => {
     {
       title: "Resources",
       links: [
-        { name: "Resume Tips", href: "#" },
-        { name: "Career Advice", href: "#" },
-        { name: "Industry Guides", href: "#" },
+        // { name: "Resume Tips", href: "#" },
+        // { name: "Career Advice", href: "#" },
+        // { name: "Industry Guides", href: "#" },
         { name: "Blog", href: "#" }
       ]
     }
