@@ -54,7 +54,22 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
   };
 
   const handleFileSelect = () => {
-    fileInputRef.current?.click();
+    // Ensure the file input is properly triggered on mobile
+    if (fileInputRef.current) {
+      try {
+        // Force focus and click for mobile compatibility
+        fileInputRef.current.focus();
+        fileInputRef.current.click();
+      } catch (error) {
+        console.error('File input error:', error);
+        // Fallback: try to show a more mobile-friendly message
+        toast({
+          title: "File selection issue",
+          description: "Please try tapping the button again, or use your device's file manager to select a file.",
+          variant: "destructive",
+        });
+      }
+    }
   };
 
   const getResumeTemplate = (filename: string) => {
@@ -221,9 +236,20 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
   };
 
   const handleFileUpload = async (file: File) => {
-    // File validation
-    const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
-    if (!validTypes.includes(file.type)) {
+    // Enhanced file validation for mobile compatibility
+    const validTypes = [
+      'application/pdf', 
+      'application/msword', 
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+      'text/plain'
+    ];
+    
+    // Check both MIME type and file extension for mobile compatibility
+    const fileExtension = file.name.toLowerCase().split('.').pop();
+    const isValidType = validTypes.includes(file.type) || 
+                       ['pdf', 'doc', 'docx', 'txt'].includes(fileExtension || '');
+    
+    if (!isValidType) {
       toast({
         title: "Invalid file type",
         description: "Please upload a PDF, Word document, or text file.",
@@ -257,9 +283,20 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
         description: "Please choose your profile type to continue.",
       });
     } catch (error: any) {
+      console.error('File import error:', error);
+      
+      // Mobile-specific error messages
+      let errorMessage = error?.message || "There was an error processing your file. Please try again.";
+      
+      if (error?.message?.includes('worker')) {
+        errorMessage = "PDF processing failed. For best results on mobile, try uploading a TXT or DOCX file instead.";
+      } else if (error?.message?.includes('mammoth')) {
+        errorMessage = "Word document processing failed. Please try a different file or format.";
+      }
+      
       toast({
         title: "Import failed",
-        description: error?.message || "There was an error processing your file. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -453,12 +490,21 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
               onDragOver={handleDrag}
               onDrop={handleDrop}
             >
-              <Input
+              <input
                 ref={fileInputRef}
                 type="file"
                 accept=".pdf,.doc,.docx,.txt"
-                onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0])}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    // Reset the input value to allow re-selecting the same file
+                    e.target.value = '';
+                    handleFileUpload(file);
+                  }
+                }}
                 className="hidden"
+                multiple={false}
+                style={{ display: 'none' }}
               />
               
               <motion.div
@@ -479,12 +525,23 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
                 <p className="text-muted-foreground mb-8 max-w-lg mx-auto text-lg">
                   Drag & drop your PDF or Word document, or click to browse. 
                   Our AI will extract and optimize your information.
+                  <span className="block text-sm mt-2 text-muted-foreground/80">
+                    📱 Mobile-friendly: Tap the button below to select files from your device
+                  </span>
                 </p>
                 <Button
                   type="button"
                   onClick={handleFileSelect}
-                  className="btn-upload group"
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    handleFileSelect();
+                  }}
+                  className="btn-upload group touch-manipulation"
                   disabled={isImporting}
+                  style={{ 
+                    WebkitTapHighlightColor: 'transparent',
+                    touchAction: 'manipulation'
+                  }}
                 >
                   {isImporting ? (
                     <Loader2 className="w-5 h-5 mr-3 animate-spin" />

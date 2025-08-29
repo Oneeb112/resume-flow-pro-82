@@ -158,6 +158,19 @@
     font-weight: 600;
     letter-spacing: 0.01em;
     box-shadow: 0 4px 15px -3px rgba(16, 185, 129, 0.3);
+    /* Mobile touch improvements */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  /* Mobile-specific button improvements */
+  @media (max-width: 768px) {
+    .btn-upload {
+      @apply py-5 px-6;
+      min-height: 56px; /* Better touch target size */
+      font-size: 16px; /* Prevent zoom on iOS */
+    }
   }
 
   /* Enhanced Card Variants */
@@ -206,6 +219,14 @@
     @apply relative border-2 border-dashed rounded-2xl p-12 transition-all duration-500;
     background: linear-gradient(145deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
     backdrop-filter: blur(20px);
+  }
+
+  /* Mobile-specific upload area improvements */
+  @media (max-width: 768px) {
+    .upload-area {
+      @apply p-8;
+      min-height: 200px; /* Better mobile layout */
+    }
   }
 
   .upload-area:hover {
