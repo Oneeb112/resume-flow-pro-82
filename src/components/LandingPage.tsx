@@ -523,10 +523,10 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
                 </motion.div>
                 <h3 className="text-3xl font-display font-semibold mb-4 text-foreground">Import Your Existing Resume</h3>
                 <p className="text-muted-foreground mb-8 max-w-lg mx-auto text-lg">
-                  Drag & drop your PDF or Word document, or click to browse. 
+                  Drag & drop your Word document, or click to browse. 
                   Our AI will extract and optimize your information.
                   <span className="block text-sm mt-2 text-muted-foreground/80">
-                    📱 Mobile-friendly: Tap the button below to select files from your device
+                    {/* 📱 Mobile-friendly: Tap the button below to select files from your device */}
                   </span>
                 </p>
                 <Button
