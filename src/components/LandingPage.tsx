@@ -14,6 +14,8 @@ interface LandingPageProps {
 const LandingPage = ({ onSelectPath }: LandingPageProps) => {
   const [dragActive, setDragActive] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const [showPathSelection, setShowPathSelection] = useState(false);
+  const [importedData, setImportedData] = useState<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -246,17 +248,14 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
       // Parse real content instead of using a dummy template
       const resumeData = await importResume(file);
 
-      // Store the data for the builder to pick up
-      localStorage.setItem('importedResumeData', JSON.stringify(resumeData));
+      // Store the data temporarily and show path selection
+      setImportedData(resumeData);
+      setShowPathSelection(true);
 
-      const isStudent = resumeData.workExperience.length === 0 && resumeData.education.length > 0;
       toast({
         title: "Resume imported successfully!",
-        description: "We extracted your details. You can now review and edit.",
+        description: "Please choose your profile type to continue.",
       });
-
-      // Navigate to resume builder with best-guess path
-      onSelectPath(isStudent ? 'student' : 'employee');
     } catch (error: any) {
       toast({
         title: "Import failed",
@@ -266,6 +265,16 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
     } finally {
       setIsImporting(false);
     }
+  };
+
+  const handlePathSelection = (path: 'student' | 'employee') => {
+    if (importedData) {
+      // Store the data for the builder to pick up
+      localStorage.setItem('importedResumeData', JSON.stringify(importedData));
+      setShowPathSelection(false);
+      setImportedData(null);
+    }
+    onSelectPath(path);
   };
 
   const features = [
@@ -665,6 +674,58 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
             Trusted by thousands of job seekers worldwide • ATS Compatible • HR Approved • Industry Standard
           </motion.p>
         </motion.section>
+
+        {/* Path Selection Overlay for Import */}
+        {showPathSelection && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="bg-white rounded-2xl p-8 max-w-2xl w-full shadow-2xl"
+            >
+              <h2 className="text-3xl font-display font-bold text-center mb-2 text-foreground">
+                Resume Imported Successfully! 🎉
+              </h2>
+              <p className="text-muted-foreground text-center mb-8 text-lg">
+                Choose your profile type to continue building your resume
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Student Path */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="path-card cursor-pointer"
+                  onClick={() => handlePathSelection('student')}
+                >
+                  <GraduationCap className="w-16 h-16 text-primary mx-auto mb-4" />
+                  <h3 className="text-xl font-display font-semibold mb-2 text-foreground">Student</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Focus on education, projects, and potential
+                  </p>
+                </motion.div>
+
+                {/* Employee Path */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="path-card cursor-pointer"
+                  onClick={() => handlePathSelection('employee')}
+                >
+                  <Briefcase className="w-16 h-16 text-primary mx-auto mb-4" />
+                  <h3 className="text-xl font-display font-semibold mb-2 text-foreground">Professional</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Highlight experience and achievements
+                  </p>
+                </motion.div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </div>
 
       {/* Floating Action Button */}
