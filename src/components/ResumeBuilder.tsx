@@ -89,10 +89,10 @@ const ResumeBuilder = ({ userType, onBack, initialData }: ResumeBuilderProps) =>
         // Clear the imported data from localStorage after loading
         localStorage.removeItem('importedResumeData');
         
-        // Show success message
+        // Show success message (non-intrusive)
         toast({
           title: "Resume Data Loaded!",
-          description: "Your imported resume data has been successfully loaded. You can now edit and customize it.",
+          description: "Imported details populated. Review and customize as needed.",
         });
         
         console.log('Loaded imported resume data:', parsedData);

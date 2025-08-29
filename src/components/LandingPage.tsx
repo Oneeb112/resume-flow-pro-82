@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { GraduationCap, Briefcase, FileText, Zap, Upload, Download, Star, Users, CheckCircle, Loader2, ArrowRight, Sparkles, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 // import FloatingActionButton from "@/components/FloatingActionButton";
+import { importResume } from "@/lib/resumeImport";
 
 interface LandingPageProps {
   onSelectPath: (path: 'student' | 'employee') => void;
@@ -242,27 +243,24 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
     setIsImporting(true);
 
     try {
-      // Simulate processing delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Parse real content instead of using a dummy template
+      const resumeData = await importResume(file);
 
-      // Get appropriate template based on filename
-      const resumeData = getResumeTemplate(file.name);
-      
-      // Store the data
+      // Store the data for the builder to pick up
       localStorage.setItem('importedResumeData', JSON.stringify(resumeData));
-      
+
+      const isStudent = resumeData.workExperience.length === 0 && resumeData.education.length > 0;
       toast({
         title: "Resume imported successfully!",
-        description: `Detected ${file.name.includes('student') ? 'student' : file.name.includes('creative') ? 'creative' : 'professional'} profile. Your resume data has been loaded.`,
+        description: "We extracted your details. You can now review and edit.",
       });
 
-      // Navigate to resume builder
-      onSelectPath('employee');
-      
-    } catch (error) {
+      // Navigate to resume builder with best-guess path
+      onSelectPath(isStudent ? 'student' : 'employee');
+    } catch (error: any) {
       toast({
         title: "Import failed",
-        description: "There was an error processing your file. Please try again.",
+        description: error?.message || "There was an error processing your file. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -474,6 +472,7 @@ const LandingPage = ({ onSelectPath }: LandingPageProps) => {
                   Our AI will extract and optimize your information.
                 </p>
                 <Button
+                  type="button"
                   onClick={handleFileSelect}
                   className="btn-upload group"
                   disabled={isImporting}
