@@ -6,12 +6,9 @@ const uid = () => `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 // Extract text from various file types
 async function extractTextFromPdf(file: File): Promise<string> {
   const { getDocument, GlobalWorkerOptions } = await import("pdfjs-dist");
-  // Use CDN worker to avoid bundler hassles
-  // Version should match installed pdfjs-dist as close as possible
-  // Fallback is acceptable for text extraction
+  // Use a more reliable CDN worker URL
   // @ts-ignore
-  GlobalWorkerOptions.workerSrc =
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.js";
+  GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${(await import("pdfjs-dist/package.json")).version}/build/pdf.worker.min.js`;
 
   const data = await file.arrayBuffer();
   const pdf = await getDocument({ data }).promise;
@@ -41,25 +38,33 @@ async function extractTextFromFile(file: File): Promise<string> {
   const type = file.type;
   const name = file.name.toLowerCase();
 
-  if (type === "application/pdf" || name.endsWith(".pdf")) {
-    return extractTextFromPdf(file);
+  try {
+    if (type === "application/pdf" || name.endsWith(".pdf")) {
+      return await extractTextFromPdf(file);
+    }
+    if (
+      type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      name.endsWith(".docx")
+    ) {
+      return await extractTextFromDocx(file);
+    }
+    if (type === "text/plain" || name.endsWith(".txt")) {
+      return await extractTextFromTxt(file);
+    }
+    if (type === "application/msword" || name.endsWith(".doc")) {
+      throw new Error(
+        "Legacy .doc files are not supported. Please upload PDF, DOCX, or TXT files for best results."
+      );
+    }
+    throw new Error("Unsupported file type. Please upload PDF, DOCX, or TXT files.");
+  } catch (error) {
+    // If specific extraction fails, provide helpful fallback message
+    if (error instanceof Error && error.message.includes("worker")) {
+      throw new Error("PDF processing failed. For best results, try uploading a TXT or DOCX file instead.");
+    }
+    throw error;
   }
-  if (
-    type ===
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-    name.endsWith(".docx")
-  ) {
-    return extractTextFromDocx(file);
-  }
-  if (type === "text/plain" || name.endsWith(".txt")) {
-    return extractTextFromTxt(file);
-  }
-  if (type === "application/msword" || name.endsWith(".doc")) {
-    throw new Error(
-      "Legacy .doc files are not supported. Please upload PDF, DOCX, or TXT."
-    );
-  }
-  throw new Error("Unsupported file type. Please upload PDF, DOCX, or TXT.");
 }
 
 // Simple heuristics-based parser to convert free text into ResumeData
@@ -71,9 +76,9 @@ function parseResumeTextToData(text: string): ResumeData {
 
   const emailMatch = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
   const phoneMatch = text.match(
-    /(\+?\d{1,3}[\s.-]?)?\(?\d{2,4}\)?[s.-]?\d{3,4}[\s.-]?\d{3,4}/
+    /(\+?\d{1,3}[\s.-]?)?\(?\d{2,4}\)?[\s.-]?\d{3,4}[\s.-]?\d{3,4}/
   );
-  const linkedInMatch = text.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/[\w-.]+}/i);
+  const linkedInMatch = text.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/[\w-_.]+/i);
 
   // first non-empty line that isn't email/phone/url -> name candidate
   let fullName = "";
