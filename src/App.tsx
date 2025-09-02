@@ -14,6 +14,7 @@ import ContactPage from "./pages/ContactPage";
 import CalendarDemoPage from "./pages/CalendarDemoPage";
 import ScrollIndicator from "./components/ScrollIndicator";
 
+
 const queryClient = new QueryClient();
 
 function App() {
