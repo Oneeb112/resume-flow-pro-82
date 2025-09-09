@@ -1,14 +1,25 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, FileText, Zap } from "lucide-react";
+import { Menu, X, FileText, Zap, User, LogOut, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
   const location = useLocation();
+  const { currentUser, userProfile, signOut } = useAuth();
   
   const navbarBg = useTransform(
     scrollY,
@@ -35,6 +46,14 @@ const Navbar = () => {
   useEffect(() => {
     setIsOpen(false);
   }, [location.pathname]);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
+  };
 
   const navItems = [
     { name: "Home", href: "/" },
@@ -110,28 +129,88 @@ const Navbar = () => {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              <Link to="/login">
-                <Button variant="ghost" className="font-bold text-lg">
-                  Sign In
-                </Button>
-              </Link>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-            >
-              <Link to="/signup">
-                <Button className="btn-hero">
-                  Get Started
-                </Button>
-              </Link>
-            </motion.div>
+            {currentUser ? (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-10 w-auto px-3 rounded-full hover:bg-gray-50 transition-colors">
+                      <div className="flex items-center space-x-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src={currentUser.photoURL || ""} alt={userProfile?.displayName || "User"} />
+                          <AvatarFallback>
+                            {userProfile?.firstName?.[0] || userProfile?.displayName?.[0] || "U"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="hidden lg:block text-left">
+                          <p className="text-sm font-medium leading-none">
+                            {userProfile?.firstName || userProfile?.displayName || currentUser.displayName || "User"}
+                          </p>
+                        </div>
+                      </div>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {userProfile?.firstName || userProfile?.displayName || currentUser.displayName || "User"}
+                        </p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {currentUser.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to="/profile" className="flex items-center">
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Profile</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/settings" className="flex items-center">
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Settings</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSignOut} className="text-red-600">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Sign out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </motion.div>
+            ) : (
+              <>
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                >
+                  <Link to="/login">
+                    <Button variant="ghost" className="font-bold text-lg">
+                      Sign In
+                    </Button>
+                  </Link>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                >
+                  <Link to="/signup">
+                    <Button className="btn-hero">
+                      Get Started
+                    </Button>
+                  </Link>
+                </motion.div>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -181,16 +260,59 @@ const Navbar = () => {
         </motion.div>
       ))}
       <div className="pt-2 space-y-4 border-t border-border/50">
-        <Link to="/login">
-          <Button variant="ghost" className="w-full justify-start font-bold text-lg">
-            Sign In
-          </Button>
-        </Link>
-        <Link to="/signup">
-          <Button className="w-full btn-hero">
-            Get Started
-          </Button>
-        </Link>
+        {currentUser ? (
+          <>
+              <div className="flex items-center space-x-3 px-4 py-3">
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src={currentUser.photoURL || ""} alt={userProfile?.displayName || "User"} />
+                  <AvatarFallback>
+                    {userProfile?.firstName?.[0] || userProfile?.displayName?.[0] || "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">
+                    {userProfile?.firstName || userProfile?.displayName || currentUser.displayName || "User"}
+                  </p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {currentUser.email}
+                  </p>
+                </div>
+              </div>
+            <Link to="/profile">
+              <Button variant="ghost" className="w-full justify-start font-bold text-lg">
+                <User className="mr-2 h-4 w-4" />
+                Profile
+              </Button>
+            </Link>
+            <Link to="/settings">
+              <Button variant="ghost" className="w-full justify-start font-bold text-lg">
+                <Settings className="mr-2 h-4 w-4" />
+                Settings
+              </Button>
+            </Link>
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start font-bold text-lg text-red-600"
+              onClick={handleSignOut}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign Out
+            </Button>
+          </>
+        ) : (
+          <>
+            <Link to="/login">
+              <Button variant="ghost" className="w-full justify-start font-bold text-lg">
+                Sign In
+              </Button>
+            </Link>
+            <Link to="/signup">
+              <Button className="w-full btn-hero">
+                Get Started
+              </Button>
+            </Link>
+          </>
+        )}
       </div>
     </div>
   )}

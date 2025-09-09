@@ -7,11 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, EyeOff, Lock, Mail, User, Phone, Building, ArrowRight, CheckCircle, AlertCircle, Github } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { signUp, signInWithGoogle, signInWithGithub } = useAuth();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -54,14 +56,12 @@ const SignUpForm = () => {
       newErrors.email = "Please enter a valid email address";
     }
 
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Phone number is required";
-    }
+    // Phone is optional, no validation needed
 
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters long";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters long";
     }
 
     if (!formData.confirmPassword) {
@@ -88,31 +88,41 @@ const SignUpForm = () => {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Handle successful signup
-      console.log("✅ Signup successful!");
-      
-      toast({
-        title: "Account Created Successfully!",
-        description: "Welcome to ResumeAI! Redirecting to home page...",
+      await signUp(formData.email, formData.password, {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phone: formData.phone,
+        company: formData.company,
       });
       
-      // Navigate to home page after successful signup
-      setTimeout(() => navigate("/"), 1500);
+      // Navigate to email verification page after successful signup
+      navigate("/verify-email");
       
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Signup failed:", error);
-      setErrors({ general: "Signup failed. Please try again." });
+      setErrors({ general: error.message || "Signup failed. Please try again." });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleSocialSignup = (provider: string) => {
-    console.log(`Signing up with ${provider}`);
-    // Implement social signup logic here
+  const handleSocialSignup = async (provider: string) => {
+    setIsSubmitting(true);
+    try {
+      if (provider === 'google') {
+        await signInWithGoogle();
+      } else if (provider === 'github') {
+        await signInWithGithub();
+      }
+      
+      // Navigate to home page after successful social signup
+      navigate("/");
+    } catch (error: any) {
+      console.error(`${provider} signup failed:`, error);
+      setErrors({ general: error.message || `Failed to sign up with ${provider}` });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const inputVariants = {

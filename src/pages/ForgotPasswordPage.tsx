@@ -5,8 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const ForgotPasswordPage = () => {
+  const { resetPassword } = useAuth();
+  const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -29,15 +33,11 @@ const ForgotPasswordPage = () => {
     setError("");
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Handle successful submission
+      await resetPassword(email);
       setIsSubmitted(true);
-      
-    } catch (error) {
+    } catch (error: any) {
       console.error("Password reset failed:", error);
-      setError("Failed to send reset email. Please try again.");
+      setError(error.message || "Failed to send reset email. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

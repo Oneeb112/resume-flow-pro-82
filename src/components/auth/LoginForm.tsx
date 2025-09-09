@@ -5,12 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, EyeOff, Lock, Mail, AlertCircle, User, Github } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+  const { signIn, signInWithGoogle, signInWithGithub } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -56,32 +59,38 @@ const LoginForm = () => {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await signIn(formData.email, formData.password);
       
-      // Handle successful login
-      console.log("Login successful:", formData);
+      // Navigate to intended page or home after successful login
+      const from = location.state?.from?.pathname || "/";
+      navigate(from, { replace: true });
       
-      // Show success message
-      toast({
-        title: "Login Successful!",
-        description: "Welcome back! Redirecting to home page...",
-      });
-      
-      // Navigate to home page after successful login
-      setTimeout(() => navigate("/"), 1500);
-      
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login failed:", error);
-      setErrors({ general: "Invalid email or password. Please try again." });
+      setErrors({ general: error.message || "Invalid email or password. Please try again." });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleSocialLogin = (provider: string) => {
-    console.log(`Logging in with ${provider}`);
-    // Implement social login logic here
+  const handleSocialLogin = async (provider: string) => {
+    setIsSubmitting(true);
+    try {
+      if (provider === 'google') {
+        await signInWithGoogle();
+      } else if (provider === 'github') {
+        await signInWithGithub();
+      }
+      
+      // Navigate to intended page or home after successful social login
+      const from = location.state?.from?.pathname || "/";
+      navigate(from, { replace: true });
+    } catch (error: any) {
+      console.error(`${provider} login failed:`, error);
+      setErrors({ general: error.message || `Failed to sign in with ${provider}` });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const inputVariants = {
@@ -89,14 +98,14 @@ const LoginForm = () => {
     blur: { scale: 1, y: 0 }
   };
 
-  const fillDummyData = () => {
-    setFormData({
-      email: "demo@example.com",
-      password: "demo",
-      rememberMe: false
-    });
-    setErrors({}); // Clear any previous errors
-  };
+  // const fillDummyData = () => {
+  //   setFormData({
+  //     email: "demo@example.com",
+  //     password: "demo",
+  //     rememberMe: false
+  //   });
+  //   setErrors({}); // Clear any previous errors
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4 sm:p-6 lg:p-8">
@@ -322,7 +331,7 @@ const LoginForm = () => {
             </div>
 
             {/* Dummy Data Button */}
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.65 }}
@@ -336,7 +345,7 @@ const LoginForm = () => {
               >
                 🧪 Fill Test Data (demo@example.com / demo123)
               </Button>
-            </motion.div>
+            </motion.div> */}
 
             {/* Submit Button */}
             <motion.button
