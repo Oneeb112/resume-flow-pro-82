@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, EyeOff, Lock, Mail, User, Phone, Building, ArrowRight, CheckCircle, AlertCircle, Github } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, User, Phone, Building, ArrowRight, CheckCircle, AlertCircle, Github, Home } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -149,6 +149,27 @@ const SignUpForm = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="relative z-10 w-full max-w-md lg:max-w-lg"
       >
+        {/* Back to Home Button */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mb-6"
+        >
+          <Link
+            to="/"
+            className="inline-flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors duration-200 group"
+          >
+            <motion.div
+              whileHover={{ x: -2 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <Home className="w-4 h-4" />
+            </motion.div>
+            <span className="text-sm font-medium group-hover:underline">Back to Home</span>
+          </Link>
+        </motion.div>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -175,7 +196,7 @@ const SignUpForm = () => {
         </motion.div>
 
         {/* Social Signup Buttons */}
-        {/* <motion.div
+        { <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -211,10 +232,10 @@ const SignUpForm = () => {
               <span className="text-sm sm:text-base font-medium">Continue with GitHub</span>
             </div>
           </motion.button>
-        </motion.div> */}
+        </motion.div> }
 
         {/* Divider */}
-        {/* <motion.div
+        { <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
@@ -225,7 +246,7 @@ const SignUpForm = () => {
             <span className="px-4 text-gray-500 text-sm font-medium">or sign up with email</span>
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
           </div>
-        </motion.div> */}
+        </motion.div> }
 
         {/* Form */}
         <motion.form

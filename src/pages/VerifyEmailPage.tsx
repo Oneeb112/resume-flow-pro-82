@@ -154,13 +154,13 @@ const VerifyEmailPage = () => {
             )}
           </Button>
 
-          <Button
+          {/* <Button
             onClick={handleSkip}
             variant="ghost"
             className="w-full text-muted-foreground hover:text-foreground"
           >
             Skip for Now
-          </Button>
+          </Button> */}
         </motion.div>
 
         <motion.div

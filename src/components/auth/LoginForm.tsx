@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, EyeOff, Lock, Mail, AlertCircle, User, Github } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, AlertCircle, User, Github, Home } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -121,6 +121,27 @@ const LoginForm = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="relative z-10 w-full max-w-sm sm:max-w-md mx-auto"
       >
+        {/* Back to Home Button */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mb-6"
+        >
+          <Link
+            to="/"
+            className="inline-flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors duration-200 group"
+          >
+            <motion.div
+              whileHover={{ x: -2 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <Home className="w-4 h-4" />
+            </motion.div>
+            <span className="text-sm font-medium group-hover:underline">Back to Home</span>
+          </Link>
+        </motion.div>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
