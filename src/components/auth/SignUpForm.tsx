@@ -175,7 +175,7 @@ const SignUpForm = () => {
         </motion.div>
 
         {/* Social Signup Buttons */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -211,10 +211,10 @@ const SignUpForm = () => {
               <span className="text-sm sm:text-base font-medium">Continue with GitHub</span>
             </div>
           </motion.button>
-        </motion.div>
+        </motion.div> */}
 
         {/* Divider */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
@@ -225,7 +225,7 @@ const SignUpForm = () => {
             <span className="px-4 text-gray-500 text-sm font-medium">or sign up with email</span>
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
           </div>
-        </motion.div>
+        </motion.div> */}
 
         {/* Form */}
         <motion.form
